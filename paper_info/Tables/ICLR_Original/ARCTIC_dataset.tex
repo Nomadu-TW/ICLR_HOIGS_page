@@ -1,0 +1,37 @@
+\newcommand{\tablefirst}[0]{\cellcolor{myred}}
+\newcommand{\tablesecond}[0]{\cellcolor{myorange}}
+\newcommand{\tablethird}[0]{\cellcolor{myyellow}}
+
+\begin{table*}[t]
+\caption{
+Per-scene quantitative evaluation on the ARCTIC dataset against baselines of our method. 
+\label{tab:ARCTIC_comparison}
+}
+\centering
+
+% -------- 첫 번째 표 (AVG 없음) --------
+\resizebox{\linewidth}{!}{
+\setlength{\tabcolsep}{2pt}
+\begin{tabular}{l||cc||cc||cc||cc||cc cc}
+\toprule
+& \multicolumn{2}{c||}{\textsc{\small Box}} 
+& \multicolumn{2}{c||}{\textsc{\small Capsulemachine}} 
+& \multicolumn{2}{c||}{\textsc{\small Espressomachine}} 
+& \multicolumn{2}{c||}{\textsc{\small Mixer}} 
+& \multicolumn{2}{c}{\textsc{\small Avg}} \\
+
+& \footnotesize PSNR$\uparrow$ & \footnotesize LPIPS$\downarrow$ 
+& \footnotesize PSNR$\uparrow$ & \footnotesize LPIPS$\downarrow$ 
+& \footnotesize PSNR$\uparrow$ & \footnotesize LPIPS$\downarrow$ 
+& \footnotesize PSNR$\uparrow$ & \footnotesize LPIPS$\downarrow$ 
+& \footnotesize PSNR$\uparrow$ & \footnotesize LPIPS$\downarrow$ \\
+\hline
+4DGS (\textcolor{blue}{\cite{wu20244d}}) &22.22 &0.182 &26.15 &0.124 &21.80 &0.196 &23.21 &0.166 &23.35 &0.167 \\
+ED3DGS (\textcolor{blue}{\cite{bae2024per}}) &20.60 &0.153 &25.10 &0.089 &19.50 &0.227 &22.14 &0.139 &21.84 &0.152 \\
+HOLD (\textcolor{blue}{\cite{fan2024hold}}) & \textbf{24.72} & 0.494 & 25.52 & 0.522 & 23.52 & 0.547 &23.35 &0.540 &24.28 &0.526 \\
+Ours &23.50 &\textbf{0.124} &\textbf{27.05} &\textbf{0.069} & \textbf{25.29} & \textbf{0.079} &\textbf{24.59} & \textbf{0.095} & \textbf{25.11} & \textbf{0.092} \\
+\bottomrule
+\end{tabular}
+}
+\vspace{-2mm}
+\end{table*}

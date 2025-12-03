@@ -1,0 +1,19 @@
+\begin{table}[t!]
+    \centering
+    \scalebox{0.75}{
+    \begin{tabular}{l|cc}
+        \hline
+        \multirow{}{}{} & \multicolumn{2}{c}{Avg (6 scenes)} \\
+        & PSNR$\uparrow$ & LPIPS$\downarrow$ \\
+        \hline
+        w/o CHS deformation (using MLP) & 24.52 & 0.154 \\
+        Baseline deformation             & 25.01 & 0.130 \\
+        w/o human feature                & 25.67 & 0.119 \\
+        w/o HOI module                   & 25.24 & 0.128 \\
+        \rowcolor{gray!15}
+        HOIGS (\textbf{Ours})            & \textbf{25.89} & \textbf{0.114} \\
+        \hline
+    \end{tabular}}
+    \caption{Ablation studies on the HOSNeRF dataset using our method. The \textbf{best} results are highlighted.}
+    \label{ablation}
+\end{table}

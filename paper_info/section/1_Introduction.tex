@@ -1,0 +1,53 @@
+\section{Introduction}
+
+%1. 논문에서 다루고자 하는 task (task의 중요성 설명)
+% 복잡한 인간–객체 상호작용이 포함된 장면의 비디오를 재구성하고 새로운 시점을 합성하는 것은 컴퓨터 비전과 그래픽스 분야에서 핵심적인 연구 주제이다. 이러한 기술은 가상현실, 메타버스, 3D 애니메이션 등 다양한 응용으로 확장될 수 있다. 그러나 단일 시점 카메라의 한계와 인간–객체 간의 복잡한 상호작용을 정확히 모델링해야 한다는 점은 여전히 고품질 재구성을 위한 주요 도전 과제로 남아 있다. 이러한 문제를 해결하는 것은 실제와 유사한 장면의 이해와 표현을 가능하게 하는 데 필수적이다.
+
+Reconstructing videos of scenes that involve complex interactions between humans and objects and synthesizing novel viewpoints constitute a central research problem in computer vision and graphics. These techniques can be extended to various applications, including virtual reality, the metaverse, and 3D animation. However, the inherent limitations of monocular cameras and the need to accurately model intricate interactions between humans and objects remain major challenges for achieving high-quality reconstruction. Addressing these issues is essential for enabling realistic scene understanding and representation.  
+
+
+%2. 해당 task의 기존 연구들 -> 문제점을 함꼐 언급하면서 진행
+
+% 2-1 Human 기반의 Gaussian Splatting 기반 문제점을 언급
+
+%최근 사람 중심 비디오 장면 재구성 연구들은 Human Pose Estimation과 Gaussian Splatting을 결합하여 모델링을 수행한다. 일반적으로 각 프레임에 대해 회귀된 SMPL 파라미터를 사전에 획득한 뒤, T-pose를 기준으로 canonical space를 정의하고, 해당 공간에서 3D Gaussian 파라미터를 설정한다. 이후 feature plane과 MLP를 통해 해당 파라미터를 학습하고, LBS(linear blend skinning) 함수를 이용하여 각 프레임에 해당하는 3D 공간으로의 deformation을 적용함으로써 전체 장면을 구성하고 렌더링한다. 이러한 방식은 사람과 배경에 특화된 모델로 발전해왔으며, 정밀한 human pose 정보에 기반해 상대적으로 안정적인 성능을 보인다.
+%그러나 기존 접근법들은 사람의 자세 정보를 중심으로 설계되어 있어, 사람과 객체가 동시에 상호작용하는 장면을 직접적으로 모델링하지 못한다. 이로 인해 객체가 동적으로 움직이는 경우에도 정적인 배경으로 처리되거나, 상호작용 과정에서 사람과 객체 간의 관계가 충분히 반영되지 않는 한계가 있다. 따라서 사람과 객체가 함께 상호작용하는 장면을 정확히 재구성하기 위해서는 기존 human-centric 모델을 넘어서는 새로운 모델링 방식이 요구된다.
+
+Recent approaches on human-centric video scene reconstruction (\textcolor{blue}{\cite{kocabas2024hugs,moon2024expressive,hu2024gauhuman,qian20243dgs, liu2024animatable, hu2024gaussianavatar, wen2024gomavatar, kim2025showmak3r}}) have combined human pose estimation with 3D Gaussian Splatting (3DGS) (\textcolor{blue}{\cite{kerbl20233d}}) to model dynamic scenes. Typically, SMPL (\textcolor{blue}{\cite{loper2023smpl}}) parameters are regressed in advance for each frame, and a canonical space is defined using a T-pose as the reference. Within this space, 3D Gaussian parameters are established and trained using feature planes and MLPs. Subsequently, deformation to each frame's 3D space is performed via Linear Blend Skinning (LBS) (\textcolor{blue}{\cite{loper2023smpl}}), allowing for scene reconstruction and rendering. These methods have evolved into specialized models focused on humans and static backgrounds, achieving reliable performance when accurate human pose priors are available. However, existing approaches mainly focus on modeling humans alone, and thus fail to reconstruct complete scenes that involve objects beyond the human body. As a result, dynamically moving objects are often treated as static background or even disappear from the reconstructed scene. Even when deformations of objects are modeled separately, the interactions between humans and objects are not sufficiently considered in dynamic scenarios, which leads to artifacts and noisy results in the interaction regions, as shown in Fig. \textcolor{blue}{\ref{fig:teaser}}. Consequently, accurately reconstructing scenes that involve both humans and objects requires new modeling paradigms that extend beyond conventional human-centric frameworks.
+
+% 2-2 Dynamic scene을 대상으로하흔 Gaussian Splatting의 문제점 언급
+
+%4D Gaussian Splatting 기반 연구들은 사람에 한정되지 않고 임의의 움직이는 객체까지 포괄할 수 있다는 장점이 있으나, 사람 중심 모델에 비해 인간 재구성 성능은 떨어지는 경향이 있다. 이러한 연구들은 대체로 canonical space를 정의하고 이를 world coordinate로 deform하는 implicit function을 학습하거나, 객체의 움직임을 explicit하게 파라미터화하여 학습하는 방식으로 발전하고 있다. 그러나 이러한 접근법들은 객체 간 상호작용을 명시적으로 모델링하지 않고, 모든 움직이는 객체를 단일 motion field로 다루기 때문에 복잡한 interaction을 충분히 반영하지 못한다. 그 결과 implicit 방식은 장기간 혹은 비선형적인 동작을 안정적으로 표현하기 어렵고, explicit 방식은 occlusion, contact, object-to-object dynamics와 같이 interaction에 따라 변화하는 다양한 시나리오를 포괄하기 어렵다.
+
+Recent studies on 4D Gaussian Splatting extend beyond humans to encompass arbitrary moving objects, offering the advantage of general applicability. However, they generally exhibit lower reconstruction performance for humans compared to human-centric models. These approaches typically either define a canonical space and learn an implicit function that deforms it into the world coordinate system (\textcolor{blue}{\cite{wu20244d,jung2023deformable,bae2024per}}), or explicitly parameterize object motions and optimize the corresponding parameters (\textcolor{blue}{\cite{yang2023real,li2024spacetime,lee2024fully}}). Nevertheless, they do not explicitly model interactions between objects and instead treat all moving entities within a single motion field, which limits their ability to capture complex interactions. As a result, implicit methods struggle to represent long-term or highly non-linear motions in a stable manner, while explicit methods fail to handle scenarios such as contact and object manipulation, as ignoring the mutual interactions between motions limits their ability to capture realistic dynamics.
+
+%3. 해당 문제를 해결하기위한 우리의 제안 방법 
+%이러한 한계를 극복하기 위해, 우리는 Human-Object Interaction Gaussian Splatting (HOIGS)를 제안한다. HOIGS는 사람과 동적 객체가 동시에 등장하는 복잡한 비디오 장면을 재구성하기 위한 통합 프레임워크로, 기존 접근법이 주로 사람의 움직임만을 모델링했던 것과 달리 사람–객체 간 상호작용을 명시적으로 고려하여 보다 정밀한 deformation 모델링을 가능하게 한다.
+
+%우리 방법의 핵심은 HOI module이며, 이 모듈은 mutual attention 구조를 통해 각 프레임에서 사람의 feature와 객체의 motion feature 간의 양방향 의존성을 학습한다. 구체적으로, 사람의 경우 hexplane 표현에서 시간에 따라 변화하는 성분을 활용하고, 객체의 경우 keyframe Gaussian의 velocity vector와 관련 파라미터를 임베딩하여 motion feature를 추출한다. 이렇게 얻어진 두 feature를 상호작용하는 attention 구조로 학습함으로써, 기존 연구들이 사람과 객체를 독립적으로 모델링함에 따라 발생했던 artifact나 불안정한 재구성 문제를 효과적으로 해결한다.
+
+%또한, 우리는 사람과 객체 각각에 적합한 deformation baseline을 도입하였다. 객체의 경우, Cubic Hermite Spline (CHS)를 활용하여 연속적인 motion trajectory를 표현하고, keyframe Gaussian의 velocity vector와 추가적인 학습 가능한 파라미터를 결합하여 강건한 motion feature를 형성한다. 사람의 경우에는 HexPlane을 deformation baseline으로 사용하여, 시간적으로 변화하는 파라미터를 공간 feature와 함께 활용함으로써 세밀한 사람의 변형을 효과적으로 모델링한다. 이렇게 추출된 사람과 객체의 feature는 HOI module에 통합되어 각각의 offset vector를 출력하게 되며, 이를 통해 접촉, 조작(manipulation), 복잡한 상호작용 등 다양한 시나리오에서도 정확하고 안정적인 deformation 추정이 가능하다.
+
+To overcome these limitations, we propose Human-Object Interaction Gaussian Splatting (HOIGS), a unified framework for reconstructing complex video scenes that involve both humans and dynamic objects. Unlike previous approaches that either model only human motion or employ a single motion field for all entities, our framework explicitly incorporates human–object interactions to achieve more faithful deformation modeling.
+
+% \textcolor{blue}{
+% We introduce deformation baselines tailored to the distinct characteristics of humans and objects. For humans, we employ SMPL-X-based Gaussian modeling to achieve robust representation against occlusions and detailed deformation. By combining temporally varying parameters with spatial features, we effectively model fine-grained human deformation while maintaining inter-frame consistency. For objects, we apply Cubic Hermite Spline (CHS) to smoothly represent continuous motion trajectories, forming robust motion feature representations by combining velocity vectors of keyframe Gaussians with learnable auxiliary parameters.
+% }
+% \textcolor{blue}{
+% Finally, we design a Cross-Attention-based HOI module to reflect interaction intensity between humans and multiple objects. Extracted human features and object features exchange information complementarily through cross-attention, generating interaction features. Subsequently, through MLP heads, Gaussian mean offsets are predicted for objects, while SMPL-X pose offsets are predicted for humans. This interaction-based attention architecture enables accurate and stable deformation estimation across diverse scenarios including artifacts, contact, manipulation, occlusion, and complex interactions that arise when modeling humans and objects independently.
+% }
+At the core of our framework lies the HOI module, which adopts a mutual attention mechanism to capture the bidirectional dependencies between human features and object motion features at each frame. Specifically, the module receives temporally varying human features, derived from the dynamic components of the hexplane representation, together with object motion features, obtained by embedding velocity vectors and their associated parameters. By explicitly learning how these two types of features influence one another, the HOI module effectively overcomes the shortcomings of prior methods that modeled humans and objects independently, which often resulted in artifacts and unstable reconstructions in interaction-rich scenes.
+
+Furthermore, we design different deformation baselines tailored to humans and objects. For objects, we employ the Cubic Hermite Spline (CHS) to capture continuous motion trajectories, embedding the velocity vectors of keyframe Gaussians along with additional learnable parameters to construct robust object motion features. For humans, we utilize hexplane as the deformation baseline, where time-varying parameters are leveraged to represent fine-grained human deformation in both spatial and temporal domains. The extracted features from both humans and objects are subsequently integrated within the HOI module, which outputs offset vectors for each entity. This design ultimately enables our framework to achieve accurate and stable deformation estimation, even under complex scenarios involving close contact, mutual manipulation, or other intricate human–object interactions.
+
+In summary, our main contributions are as follows:
+
+\begin{itemize}
+ 
+    \item We propose an entity-aware cross-attention HOI module that enforces motion consistency between humans and objects. By attending to their features, it captures interdependent dynamics and improves reconstruction during contact and manipulation.
+        
+    \item We design distinct strategies for humans and objects using tailored deformation baselines. Hexplane encodes temporal and spatial features for human motion, while Cubic Hermite Splines (CHS) embed velocity vectors and learnable parameters for objects. This separation enables accurate and expressive motion representations for both entities.
+
+    \item We conduct extensive experiments on diverse human–object interaction scenes and demonstrate that our method achieves more accurate reconstruction compared to existing human-centric and 4D Gaussian approaches.
+
+\end{itemize} 

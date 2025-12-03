@@ -1,0 +1,34 @@
+\section{Experiments}
+
+\subsection{Implementation Details}
+We use ExAvatar (\textcolor{blue}{\cite{moon2024expressive}}) as the baseline human rendering model, and all hyperparameters are kept identical to those used in ExAvatar. For object deformation using splines (\textcolor{blue}{\cite{ahlberg2016theory, de1978practical}}), we fix the time interval to 4 for all scenes. Training is conducted using an NVIDIA H100 GPU, taking approximately 5 hours per scene.
+\vspace{-5pt}
+\subsection{Datasets}
+\textbf{HOSNeRF dataset (\textcolor{blue}{\cite{liu2023hosnerf}}).} We use the monocular dynamic-scene dataset HOSNeRF, which captures human–object interaction scenarios. The dataset comprises recordings in six indoor and outdoor locations with six subjects interacting with objects within a single scenario. Each sequence contains 300–400 frames. For evaluation, we uniformly select 16 frames per sequence for testing and use the remaining frames for training, following HOSNeRF.
+
+\textbf{BEHAVE dataset (\textcolor{blue}{\cite{bhatnagar2022behave}}).} We use the BEHAVE multi-view RGB-D human–object interaction dataset, but adapt it to a monocular setting by selecting a single fixed camera from the four static viewpoints for each sequence. Specifically, we curate 9 sequences covering four distinct indoor environments, five subjects, and four objects. From each sequence’s raw video, we uniformly sample 300 frames. For evaluation, we uniformly select 16 frames per sequence for testing and use the remaining frames for training 
+
+\textbf{ARCTIC dataset (\textcolor{blue}{\cite{fan2023arctic}}).} We use the ARCTIC hand–object interaction dataset and extend comparisons to hand–object baselines. Since HOIGS is human-centric rather than hand-only, we evaluate only sequences where the full body is visible. Specifically, we use sequences of one subject interacting with four objects. Each monocular sequence (≈600 frames) is split by uniformly sampling 16 frames for testing and using the rest for training.
+
+
+\input{images_tex/Experiments_hosnerf}
+\input{images_tex/Experiments_behave}
+\input{images_tex/Experiments_arctic}
+\input{Tables/HOSNeRF_dataset}
+\input{Tables/BEHAVE_dataset}
+\input{Tables/ARCTIC_dataset}
+
+\subsection{Qualitative results}
+
+We compare our view-synthesis results with existing Gaussian-based models, which generally outperform NeRF-based methods in rendering quality. The experimental results are visualized in Fig. ~\textcolor{blue}{\ref{fig:visual_HOSNeRF}}. The dynamic-scene models D3DGS (\textcolor{blue}{\cite{yang2024deformable}}) and Ex4DGS (\textcolor{blue}{\cite{lee2024fully}}) yield ghosting artifacts for both human and dynamic objects because they fail to disentangle human and object motions within complex interactions. ExAvatar (\textcolor{blue}{\cite{moon2024expressive}}) reconstructs humans but does not handle dynamic objects. Our method accurately reconstructs humans and objects with temporally coherent motion, using CHS object trajectories with velocity vectors and the human backbone based on hexplane and LBS, while the HOI module further ensures contact consistency. On the ARCTIC dataset, as shown in Fig.~\textcolor{blue}{\ref{fig:visual_ARCTIC}}, HOLD (\textcolor{blue}{\cite{fan2024hold}}) shows limited performance in full-body–object interactions, whereas HOIGS successfully reconstructs them. This is because HOLD reconstructs only hands, while HOIGS reconstructs the entire human body including the hands. On the BEHAVE dataset, as shown in Fig.~\textcolor{blue}{\ref{fig:visual_BEHAVE}}, whereas ExAvatar suffers body–background overlap due to human misalignment in world space, our depth-based alignment ensures accurate human placement. Through qualitative results, we further confirm that our method effectively reconstructs complex human–object interactions with visually consistent outcomes.
+
+
+\subsection{Quantitative results}
+As shown in Tab.~\textcolor{blue}{\ref{tab:hosnerf_comparison}}, HOIGS achieves the highest PSNR and the lowest LPIPS on the Backpack, Tennis, Suitcase, Dance, and Lounge scenarios of the HOSNeRF dataset, surpassing prior 3D Gaussian-based models in visual quality. Tab.~\textcolor{blue}{\ref{tab:BEHAVE_comparison}} shows that on the BEHAVE dataset, it likewise attains the highest PSNR and lowest LPIPS, demonstrating effective reconstruction of complex human–object interactions from single-view input. Tab.~\textcolor{blue}{\ref{tab:ARCTIC_comparison}} shows that on the ARCTIC dataset, our method outperforms the hand–object model HOLD  (\textcolor{blue}{\cite{fan2024hold}}). Unlike HOLD, our model reconstructs complex full-body geometry while simultaneously capturing interactions with dynamic objects. 
+
+
+
+\subsection{Ablation study}
+
+\input{Tables/ablation}
+We conduct ablation studies to validate the effectiveness of the proposed method. As shown in Tab.~\textcolor{blue}{\ref{ablation}}, modeling object deformation with a simple MLP yields the lowest performance, while our CHS-based baseline deformation improves PSNR by 0.5, demonstrating its superiority. Removing the HOI module and applying only velocity further results in a 0.6 drop in PSNR compared to the full model, confirming the necessity of explicitly modeling human–object interactions. Finally, replacing the time-varying hexplane features with simple parameter embeddings for the human features leads to a 0.2 decrease in PSNR, highlighting the effectiveness of our human feature design.

@@ -1,0 +1,7 @@
+\section{Conclusion}
+We presented HOIGS, a novel framework for reconstructing dynamic scenes with explicit modeling of human–object interactions from monocular videos. By combining hexplane-based human deformation, spline-based object motion, and an interaction-aware HOI module, our method achieves stable and accurate reconstruction even in challenging scenarios with contact and manipulation. In particular, the explicit treatment of human-object interactions enables our framework not only to recover realistic human geometry but also to faithfully capture object dynamics and their mutual influences, which have been largely overlooked in prior works. Extensive experiments on HOSNeRF, BEHAVE, and ARCTIC datasets demonstrate that HOIGS outperforms state-of-the-art human-centric and 4D Gaussian approaches in both visual quality and consistency, highlighting its effectiveness in advancing realistic modeling of complex human–object interactions.
+
+\textbf{Limitations and future works.} While our framework handles typical dynamic motions well, it struggles under minimal camera movement, where COLMAP-based pose and point cloud estimation becomes unreliable. This often leads to rendering artifacts. Future work may improve robustness in such low-baseline settings by jointly optimizing camera poses during training.
+
+
+% 사람에 대해서 novel pose가 주어질 경우, 새로운 장면을 만들 수 있다. 다만, 객체에 대해서는 사람에 종속적으로 영향을 받는 연구가

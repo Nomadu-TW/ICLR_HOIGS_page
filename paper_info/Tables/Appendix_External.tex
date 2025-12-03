@@ -1,0 +1,85 @@
+\begin{table*}[t]
+\centering
+\small
+\setlength\tabcolsep{1.0pt}
+\resizebox{\textwidth}{!}{%
+\begin{tabular}{C{4.3cm}|C{1.1cm}C{1.1cm}|C{1.1cm}C{1.1cm}|C{1.1cm}C{1.1cm}|C{1.1cm}C{1.1cm}|C{1.1cm}C{1.1cm}|C{1.1cm}C{1.1cm}|C{1.1cm}C{1.1cm}}
+\specialrule{.1em}{.05em}{.05em}
+\multirow{2}{*}{Method Combinations} &
+\multicolumn{2}{c|}{\textbf{Backpack}} &
+\multicolumn{2}{c|}{\textbf{Tennis}} &
+\multicolumn{2}{c|}{\textbf{Suitcase}} &
+\multicolumn{2}{c|}{\textbf{Playground}} &
+\multicolumn{2}{c|}{\textbf{Dance}} &
+\multicolumn{2}{c|}{\textbf{Lounge}} &
+\multicolumn{2}{c}{\textbf{Average}} \\
+& PSNR$\uparrow$ & LPIPS$\downarrow$
+& PSNR$\uparrow$ & LPIPS$\downarrow$
+& PSNR$\uparrow$ & LPIPS$\downarrow$
+& PSNR$\uparrow$ & LPIPS$\downarrow$
+& PSNR$\uparrow$ & LPIPS$\downarrow$
+& PSNR$\uparrow$ & LPIPS$\downarrow$ 
+& PSNR$\uparrow$ & LPIPS$\downarrow$ \\ \hline
+
+Samurai + MetricV2
+& 25.78 & 0.082 
+& 27.12 & 0.108 
+& 22.09 & 0.246 
+& 25.23 & 0.103 
+& 24.17 & 0.098 
+& 30.97 & 0.048 
+& 25.89 & 0.114 \\
+
+Samurai + Video Depth Anything
+& 25.85 & 0.080 
+& 27.18 & 0.106 
+& 22.15 & 0.241 
+& 25.28 & 0.102 
+& 24.22 & 0.096 
+& 31.05 & 0.046 
+& 25.96 & 0.112 \\
+
+Samurai + DepthCrafter
+& 25.72 & 0.088 
+& 27.08 & 0.108 
+& 22.06 & 0.249 
+& 25.20 & 0.109 
+& 24.08 & 0.099 
+& 30.93 & 0.048 
+& 25.85 & 0.117 \\
+
+TrackAnything + MetricV2
+& 25.72 & 0.086 
+& 27.05 & 0.109 
+& 22.03 & 0.246 
+& 25.18 & 0.106 
+& 24.15 & 0.100 
+& 30.93 & 0.052 
+& 25.84 & 0.116 \\
+
+SAMv2 + Video Depth Anything
+& 26.01 & 0.076 
+& 27.38 & 0.103 
+& 22.33 & 0.241 
+& 25.47 & 0.100 
+& 24.42 & 0.095 
+& 31.20 & 0.041 
+& 26.14 & 0.109 \\
+
+MaskRCNN + MetricV2
+& 25.33 & 0.099 
+& 26.67 & 0.125 
+& 21.66 & 0.257 
+& 24.78 & 0.117 
+& 23.69 & 0.110 
+& 30.52 & 0.065 
+& 25.44 & 0.129 \\
+
+\specialrule{.1em}{.05em}{.05em}
+\end{tabular}%
+}
+\caption{
+Sensitivity analysis of HOIGS on the HOSNeRF dataset using different combinations of segmentation and depth estimation priors. The results demonstrate the robustness of our method, with consistent performance across various modern priors and strong performance even with older baselines (MaskRCNN).
+}
+\label{tab:sensitivity_analysis}
+\end{table*}

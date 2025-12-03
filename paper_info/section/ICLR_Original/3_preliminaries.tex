@@ -1,0 +1,21 @@
+\section{Preliminaries}
+\subsection{Human Gaussian Splatting}
+
+Recent advances have rapidly progressed in applying 3D Gaussian Splatting (3DGS)~\cite{kerbl20233d} techniques to human body modeling.
+ In particular, one line of work defines a canonical space based on an SMPL mesh~\cite{loper2023smpl} and uses multiple MLP networks to predict Gaussian attributes (geometry, color, and scale) variations. 
+The canonical Gaussian representation is then deformed to match a target pose for each frame using LBS~\cite{loper2023smpl}. 
+In other words, the method can be formulated as: 
+
+\begin{equation}
+\psi_c(f(\mathbf{T}_c)) = (\mathbf{c}, \mathbf{o}, \Delta P_c, \mathbf{R}, \mathbf{S}, \mathbf{W}), \tag{1}
+\end{equation} 
+\begin{equation}
+P_{def} = LBS(P_c,; \mathbf{\theta},; \mathbf{W}) , \tag{2}
+\label{eq_1}
+\end{equation}
+
+where $\theta$ denotes the set of SMPL pose parameters. Equation~(1) represents the extraction of Gaussian properties (color $\mathbf{c}$, opacity $\mathbf{o}$, position offset $\Delta P_c$, rotation $\mathbf{R}$, scale $\mathbf{S}$, and skinning weights $\mathbf{W}$) from the canonical space, 
+while Equation~(2) applies the LBS function to obtain the deformed positions $P_{def}$ of the Gaussians in the posed space. More recently, research \cite{moon2024expressive} has included triplane inputs to MLPs, taking various parameters as input, 
+to reproduce more realistic movements. This method uses multiple MLPs, taking triplane features and 
+3D joint poses (excluding the root pose) as inputs, to predict $A_{\text{tri}}=\{\Delta P_{\text{tri}},\,S_{\text{tri}},\,C_{\text{tri}}\}$ and $A_{\text{pose}}=\{\Delta P_{\text{pose}},\,\Delta S_{\text{pose}},\,\Delta C_{\text{pose}}\}$. 
+Additionally, $A_{\text{pose}}$ takes the normal vector of each vertex as an extra input for prediction, thereby reflecting the fine deformations that occur during animation. 

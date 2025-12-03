@@ -1,0 +1,124 @@
+\input{iclr2026/images_tex/main_fig}
+
+\section{Method}
+% 
+% method 개요 설명
+%우리는 사람과 객체의 deformation을 각각 독립적으로 모델링한 뒤, HOI 모듈을 통해 상호작용에 따른 변형을 반영하여 최종적으로 장면을 재구성한다. 먼저 객체의 deformation은 Cubic Hermite Spline을 통해 추정한다. 사람의 deformation은 HexPlane feature를 기반으로 하며, 시간에 대해 불변한 spatial feature를 활용하여 canonical space에 정의된 T-pose의 texture를 학습하고, 이후 Linear Blend Skinning(LBS)을 통해 각 world space로 deformation을 적용한다. 이러한 deformation baseline을 통해 사람과 객체를 각각 모델링하며 각 프레임에 대한 대략적인 위치를 추정한 뒤, 그로부터 motion feature를 추출한다. 마지막으로, 추출된 human과 object feature를 HOI 모듈에 입력하여 두 객체 간 상관관계에 따른 변형을 고려하고, 이를 통해 최종적으로 interaction 장면에서의 사람과 객체의 위치를 결정한다. 
+As shown in Fig. \textcolor{blue}{~\ref{figure_main_method}}, we reconstruct the scene by independently modeling the deformations of humans and objects, and then incorporating interaction-aware transformations through the HOI module. Object deformations are estimated using a Cubic Hermite Spline (CHS). Human deformations are based on hexplane features, where time-invariant spatial features are used to learn the texture of the canonical T-pose, and Linear Blend Skinning (LBS) is subsequently applied to deform the canonical representation into each world space. Using these deformation baselines, we independently model humans and objects and estimate their approximate positions for each frame, from which motion features are extracted. Finally, the extracted human and object features are fed into the HOI module, which accounts for interaction-driven transformations and determines the final positions of humans and objects in the reconstructed interaction scene.
+\subsection{Object deformation}
+% 우리는 diffusion prior와 SDS loss를 적용하여 전체 시퀀스를 대표하는 프레임에서 객체를 재구성한다. 재구성된 객체는 각 키프레임의 카메라 파라미터를 이용해 warping을 수행함으로써, 해당 키프레임의 3D Gaussian을 초기화한다% .
+%Diffusion prior를 통해 생성된 3D Gaussian은 실제 물체의 형상과 다소 차이가 있을 수 있다. Diffusion은 그럴듯한 이미지를 기반으로 3D shape을 생성할 수 있으나, 실제 물체의 형상을 정확하게 복원하지는 못한다. 이에 우리는 diffusion 기반으로 생성된 초기 3D shape을 실제 물체의 형상 및 기하 정보와 정합시키기 위해, explicit한 3D Gaussian deformation 모델을 도입% 한다.
+%key frame들로 warping된 Gaussian $G_k$의 mean 값 $\mathbf{m}$과 color 값만을 추출하고, 나머지 3D Gaussian 파라미터는 identity 값으로 초기화한다. 우리는 key frame에서 새롭게 정의된 mean과 color를 기반으로 object의 3D Gaussians을 구성하고, 이를 통해 object의 deformation을 모% 델링한다.
+%Object의 시간에 따른 연속적인 움직임을 표현하기 위해, 각 Gaussian의 mean 값을 제어점 기반의 곡선으로 모델링한다. 이를 위해 Cubic Hermite Spline 기반의 함수 $CHP(t, \mathbf{m})$를 정의하고, 시간 $t$에서의 object Gaussian의 위치 $M(t)$를 다음과 같이 추정한다:
+% $M(t)=CHP(t, m)$ 
+% 여기서 $\mathbf{m} = \left{ \mathbf{m}_k \mid \mathbf{m}k \in \mathbb{R}^3 \right}{k \in [0, N_c - 1]}$는 key frame들의 mean 위치들로 구성된 learnable한 제어점 집합이며, $N_{key}$는 제어점의 개수를 나타낸다.
+% $CHP(t, m)$은 다음과 같이 수식화된다:
+%수식
+% notation설명.
+%$m_{\lfloor t_s \rfloor}$는 $\lfloor t_s \rfloor$번째 key frame에 해당하는 3D Gaussian의 mean 값을 의미한다.
+%기존의 spline 정의에서 tangent는 단순히 보간을 위한 기울기로 사용되지만, 우리는 이를 velocity로 해석하여 motion feature로 활용한다. 즉, 각 Gaussian mean의 시간에 따른 위치 변화율을 velocity vector로 정의하고, 이를 임베딩함으로써 객체의 motion feature를 구성한다. 이렇게 얻어진 velocity 기반 motion feature는 객체의 동적인 움직임을 보다 효과적으로 표현할 수 있다.
+% Key frame 사이의 위치 파라미터 $m$은 각 key frame에 존재하는 Gaussian의 위치 $m_k$를 기반으로 Spline을 이용해 추정된다. 학습되는 Gaussian들은 key frame에 대응되는 Gaussian들로, key frame 사이의 Gaussian은 추정된 후 렌더링되고, 손실 함수를 통해 계산된 gradient가 역전파되어 해당 key frame의 Gaussian 파라미터가 업데이트된다.
+% Gaussian 파라미터 중 rotation과 opacity는 시간에 따라 변화하는(time-dependent) 파라미터로 설정하였다. Rotation은 각 key frame에서의 Gaussian rotation 값을 기반으로 Spherical Linear Interpolation(Slerp)을 적용하여 시간에 따른 연속적인 변화를 모델링하였다. Opacity는 물체의 움직임에 따라 발생하는 occlusion 영역을 반영할 수 있도록 time 값에 따라 변화하도록 설계하였다. 한편, scale 파라미터는 모든 key frame에서 대응되는 Gaussian들에 대해 동일한 값으로 고정하였다.
+We apply a diffusion prior with SDS loss to reconstruct the object from a representative frame of the entire sequence. The reconstructed object is then warped using the camera parameters of each keyframe to initialize the corresponding 3D Gaussians.
+However, the 3D Gaussians generated through the diffusion prior may differ from the actual object geometry. While diffusion models can generate plausible 3D shapes from images, they often fail to precisely recover the true object structure. To address this, we introduce an explicit 3D Gaussian deformation model that aligns the diffusion-based initialization with the actual object geometry and structural information.
+From the warped Gaussians $G_k$ of each keyframe, we extract each Gaussian's mean and color value, while initializing the remaining 3D Gaussian parameters with identity values. Based on the redefined mean and color from the keyframes, we construct the object’s 3D Gaussians and use them to model the object deformation.
+To represent the continuous motion of the object over time, we model the mean values of each Gaussian as control-point-based curves. Specifically, we define a Cubic Hermite Spline function $CHS(t, \mathbf{m})$, and estimate the position of an object Gaussian at time $t$, denoted as $M(t)$, as follows:
+\[
+M(t) = CHS(t, \bold{m}), \tag{1}
+\]
+where $\bold{m} = \left\{ m_k \mid m_k \in \mathbb{R}^3 \right\}_{k \in [0, N_{key} - 1]}$ is a learnable set of control points representing the mean positions of the Gaussians at each key frame, and $N_{key}$ denotes the number of key frames. $CHS(t, \mathbf{m})$ is formulated as
+
+\begin{equation}
+\begin{aligned}
+CHS(t, \mathbf{m}) &= (2t_r^3 - 3t_r^2 + 1)m_{\lfloor  t_s  \rfloor} + (t_r^3 - 2t_r^2 + t_r)\tau_{\lfloor t_s \rfloor  } \\
+&\quad + (-2t_r^3 + 3t_r^2)m_{\lfloor t_s  \rfloor + 1} + (t_r^3 - t_r^2)\tau_{\lfloor t_s \rfloor  + 1}, 
+\end{aligned} \tag{2}
+\end{equation}
+
+where $t_r = t_s - \lfloor t_s  \rfloor $, $t_s = t_n (N_{key} - 1)$, $t_n = \frac{t}{N_f - 1}$ and $N_f$ denotes the number of all frames.
+$m_{\lfloor t_s \rfloor}$ denotes the mean of the 3D Gaussians corresponding to the $\lfloor t_s \rfloor$-th key frame.
+
+In the standard formulation, $\tau_{\lfloor t_s \rfloor}$ represents the tangent vector with respect to the means of the surrounding Gaussians, which is typically approximated as $\tau_{\lfloor t_s \rfloor} = \tfrac{1}{2}\left(m_{\lfloor t_s \rfloor+1} - m_{\lfloor t_s \rfloor-1}\right)$. Instead of using this fixed approximation, we reinterpret $\tau_{\lfloor t_s \rfloor}$ as a \textit{velocity vector} and employ it as a learnable parameter. By embedding this velocity, we construct motion features that better capture the dynamic behavior of objects over time.
+
+The position parameter $\bold{m}$ between key frames is estimated via spline interpolation using both the Gaussian positions $m_k$ at the key frames and the corresponding velocity vectors $\tau_{ \lfloor k \rfloor }$. Only the Gaussians at the key frames are directly optimized during training. Once the intermediate Gaussians are estimated and rendered, the resulting gradients from the loss function are backpropagated to update the parameters of the corresponding key frame Gaussians.
+Among the Gaussian parameters, rotation and opacity are defined as time-dependent variables. The rotation parameter is modeled using Spherical Linear Interpolation based on the Gaussian rotations at each key frame, enabling smooth transitions over time. The opacity parameter varies with time to account for occluded regions caused by object motion. In contrast, the scale parameter is kept constant across all corresponding Gaussians at different key frames.
+\subsection{Human deformation}
+We model human deformation using hexplane features. 
+Specifically, we adopt time-invariant spatial features $f$ from hexplane to learn the texture of the canonical T-pose mesh $T_c$ in the canonical space. The features $f$ are processed by an MLP head $\psi$ to learn the Gaussian properties in the canonical space. This representation serves as the baseline for human deformation. The canonical human representation is then deformed into the posed world space using Linear Blend Skinning (LBS) as follows:
+\begin{equation}
+\psi_h(f(T_c)) = (c, o, \Delta P_c, R, S, W), \tag{3}
+\end{equation}
+\begin{equation}
+P_{def} = \alpha * LBS(P_c , \theta, W), \tag{4}
+\end{equation}
+where $\theta$ denotes the set of SMPL-X pose parameters and $\alpha$ is a learnable scale parameter for human pose. 
+Equation (3) extracts the Gaussian properties (color $c$, opacity $o$, position offset $\Delta P_c$, rotation $R$, scale $S$ and skinning weights $W$) from the canonical hexplane features, 
+while Equation (4) applies the LBS function to obtain the deformed positions $P_{def}$ of the Gaussians in the posed space. 
+
+To ensure that the reconstructed human representation matches the actual geometry, 
+we further apply a depth supervision loss:
+\begin{equation}
+\mathcal{L}_{depth} = \left\| D_{render} - D \right\|_1, \tag{5}
+\end{equation}
+where $D_{render}$ is the rendered depth map from the deformed Gaussians and $D$ is the depth obtained from an off-the-shelf metric depth estimation model and further scaled using the COLMAP point cloud. 
+This depth-guided supervision constrains the learnable scale parameter $\alpha$ and improves geometric fidelity in the reconstructed human shape.
+
+\subsection{HOI module}
+\textbf{Feature Extraction.} We extract time-varying features from both humans and objects to learn their interactions. For humans, instead of relying on time-invariant texture features from the canonical space, we utilize time-varying features from hexplane. Furthermore, since it is not possible to know in advance which body parts are involved in object interactions, we divide the human body into 16 parts and extract hexplane features for each part.
+
+For objects, the features are derived from the velocity embeddings associated with each keyframe in the deformation process, which capture the local motion information at those frames. In addition, we embed learnable parameters for each keyframe to represent latent motion characteristics that cannot be fully captured by velocity alone. These velocity vectors and learnable parameters are then projected together with the corresponding time values, enabling the construction of object motion features. This formulation allows us to obtain continuous motion features for objects across all frames, rather than being limited to discrete keyframes.
+
+\textbf{HOI module.} The proposed HOI module takes time-varying features of humans and objects as inputs and explicitly models their interactions. 
+Let the human and object features be denoted as $F_{\text{Human}}$ and $F_{\text{Object}}$. 
+To capture interdependencies between the two, we apply \textit{mutual attention}, where queries, keys, and values are defined as:
+\begin{equation}
+Q_h = F_{\text{Human}}W_h^Q,\;\; K_o = F_{\text{Object}}W_o^K,\;\; V_o = F_{\text{Object}}W_o^V, \tag{6}
+\end{equation}
+\begin{equation}
+Q_o = F_{\text{Object}}W_o^Q,\;\; K_h = F_{\text{Human}}W_h^K,\;\; V_h = F_{\text{Human}}W_h^V. \tag{7}
+\end{equation}
+
+Cross-attention is then performed in both directions, from human to object and from object to human, while incorporating a distance mask $B$ into the attention computation:
+\begin{equation}
+A_{h \leftarrow o} = \text{softmax}\!\left(\tfrac{Q_hK_o^\top}{\sqrt{d}} + B\right),\quad
+A_{o \leftarrow h} = \text{softmax}\!\left(\tfrac{Q_oK_h^\top}{\sqrt{d}} + B^\top\right). \tag{8}
+\end{equation}
+
+This process yields updated features $F'_{\text{Human}}$ and $F'_{\text{Object}}$ that embed interaction cues. 
+Finally, $F'_{\text{Human}}$ is used to regress $\Delta$SMPL-X refinements (body pose, hand pose, translation), while $F'_{\text{Object}}$ is used to predict $\Delta G_{\text{object}}$, i.e., corrections for Gaussian-based object motion. 
+In this way, the HOI module augments the baseline deformations (hexplane+LBS for humans and CHS for objects) with interaction-aware adjustments, enabling accurate reconstruction of human--object interaction scenes.
+
+\subsection{Optimization}
+% Canonical space에 정의된 T-pose 형태의 human Gaussian, 배경 Gaussian, 그리고 움직이는 객체에 대한 dynamic motion을 공동으로 최적화함으로써, human-object interaction 상황을 효과적으로 재구성한다. 우리는 기존 Human Gaussian Splatting 방법과 유사하게, 각 프레임에 대해 SMPL 파라미터를 regression하고, 모든 프레임에 공통으로 대응되는 T-pose 형태의 human canonial space에 정의한다. 이 canonial human을 기반으로 3D Gaussian 파라미터는 feature plane과 MLP를 통해 추정되며, 해당 파라미터는 texture가 표현된 공간을 구성한다. 이후 각 프레임의 회귀된 SMPL 파리미터를 바탕으로, LBS(Linear Blend Skinning)를 통해 canonical Gaussian들이 해당 프레임으로 deformation된다. 우리는 ExAvatar에서 영감을 받아, body shape뿐만 아니라 얼굴과 손의 표현까지 확장하기 위해 SMPL-X 모델을 사용하였다. 배경은 3D Gaussian Splatting 기반으로 표현된다.
+
+
+% We reconstruct the final human-object interaction scenario by jointly optimizing the T-pose Gaussians defined in a canonical space, background Gaussians, and dynamic motion modeling for moving objects. Similar to existing human Gaussian Splatting approaches\cite{moreau2024human, li2024animatable, kocabas2024hugs, moon2024expressive, hu2024gauhuman, qian20243dgs}, we regress the SMPL parameters\cite{loper2023smpl} for each frame and define a canonical T-pose human shared across all frames. The 3D Gaussian parameters in the canonical space are predicted using a feature plane and an MLP, forming a textured space. These canonical Gaussians are then deformed to each frame using the regressed SMPL parameters via Linear Blend Skinning (LBS)\cite{loper2023smpl}. Inspired by ExAvatar\cite{moon2024expressive}, we adopt SMPL-X\cite{pavlakos2019expressive} to represent not only the body shape but also fine-grained facial and hand motions. The background is separately modeled using standard 3D Gaussian Splatting\cite{kerbl20233d}.
+
+% 방금 언급한 human과 backgroud에 대한 모델, 그리고 object가 함께 최적화 되어지는 모습을 보이기!
+% 사용된 loss들 전부 언급하고, loss를 통해 3D Gaussian들이 어떻게 global minimum을 찾아가는지를 기입
+
+% 최적화 과정은 각가 독립적으로 분리되는 것이 아닌, 한번에 1-stage 로 함께 학습이 진행된다.
+% 우리는, 객체, 인간, 배경을 동시에 모델링한다.
+% 배경은 일반적인 3DGS( 3d gaussian splatting )을 사용하여, 모델링이 되었다.
+% 학습에는 객체와 사람 영역 마스킹을 통해, 배경만을 분리하여, 정적 가우시안 배경이 photometric loss 를 통해 학습되었다.
+% 사람 모델링의 경우, 기존에 존재하는 일반적인 접근 방법처럼, feature plane 기반 가우시안 모델링을 하였으며, 객체와 함께 상호작용하는 자연스러운 모델링을 위해, SMPL-X 기반 모델 아바타 모델을 사용하였다.
+% 전 프레임에 대해, SMPL-X 파라미터를 추출하고, Canonical T-pose human avatar 를 정의해, LBS 변환을 통해 각 프레임에 변형시켰다.
+% 학습 과정에는 가우시안 랜더러를 통해 나온 결과와 인간 영역을 비교하는 이미지 손실 기반 (SSIM,LPIPS,L1) 손실이 사용되었다. 자세한 내용은 부록에 기술하였다.
+% \textbf{객체 시작 최적화}
+% 객체는 SDS Loss 를 사용해 객체 모델링이 되었다. 객체 모델링에 있어서, 전체 프레임에서 객체를 마스킹을 통해 분리하고, 해당 객체를 diffusion을 통해 고해상도 3d 모델링을 한다.  학습에서 특정 카메라 뷰를 제한해 optimazation 과정이 안정화 되도록 하였다.
+
+For background modeling, we employ the standard 3D Gaussian Splatting (3DGS) technique. During training, we isolate the background by masking out the object and human regions, allowing the static Gaussian background to be optimized using a photometric loss. For human modeling, we regress the SMPL parameters (\textcolor{blue}{\cite{loper2023smpl}}), and incorporate an SMPL-X-based avatar model to ensure natural interaction with the object. For each frame, we extract the SMPL-X parameters and define a canonical T-pose human avatar. This canonical avatar is then deformed to match each frame using LBS. During training, image-based loss metrics such as SSIM, LPIPS, and L1-norm were utilized to compare the Gaussian renderer's output with the human region in the image.
+
+\textbf{Object Motion Optimization}
+% 객체 모션 모델링
+% 3차 스플라인(CHS)을 사용해 위치 보간을 위한 연속성을 보장했다. ~
+
+We model the motion of objects using CHS to ensure continuity in position interpolation. A CHS is a piecewise cubic polynomial that is defined by both the positions and the first derivatives (tangents) at key points in time. By specifying the starting and ending slopes for each spline segment, CHS guarantees smooth transitions between key frames, maintaining continuity not only in the object’s position but also in its velocity. In other words, the object’s trajectory over time remains continuous and smooth, without abrupt jumps or changes in speed. This property is crucial for accurately modeling temporal motion in a realistic and stable manner.
+
+\textbf{Integrated Optimization}
+% 통합 최적화
+We train our model using an integrated optimization objective that combines multiple loss terms. Specifically, the overall loss function is formulated as:
+\[
+\mathcal{L} = \gamma \, \mathcal{L}_{\text{object motion}} + \beta \, \mathcal{L}_{\text{human}} + \sigma \, \mathcal{L}_{\text{scene}} + \mathcal{L}_{\text{depth}}, \tag{9}
+\]
+where $\mathcal{L}_{\text{object motion}}$, $\mathcal{L}_{\text{human}}$, and $\mathcal{L}_{\text{scene}}$ are the loss components for the object's motion, the human-related factors, and the scene context, respectively. Here, $\gamma$, $\beta$, and $\sigma$ are hyperparameters that control the relative weight of each loss term during training. By tuning these hyperparameters, we balance the influence of each component on the training objective. This integrated optimization approach ensures that the model simultaneously accounts for object motion accuracy, human interaction plausibility, and scene consistency during learning.
