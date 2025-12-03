@@ -144,12 +144,6 @@
                 <li><a href="#Reviewers">For Reviewers</a></li>
             </ul>
         </li>
-        <li><a href="#">Paper Info</a>
-            <ul>
-                <li><a href="#Paper">Main Paper</a></li>
-                <li><a href="#Paper">Supplementary</a></li>
-            </ul>
-        </li>
     </ul>
 </div>
 
@@ -157,11 +151,8 @@
     <h1>HOIGS: Human–Object Interaction Gaussian Splatting from Monocular Videos</h1>
     <h2>Project Materials &amp; Results</h2>
     <div class="video-container" id="Video">
-        <video width="900" controls autoplay loop muted>
-            <source src="static/videos/banner_HOIGS.mp4" type="video/mp4">
-            Your browser does not support the video tag.
-        </video>
-        <p class="caption"><strong>Video results:</strong> Static and monocular video reconstructions rendered with HOIGS.</p>
+        <a href="https://www.youtube.com/watch?v=V72lzZEV1jw&t=5s" target="_blank" rel="noopener" style="display:inline-block; padding:12px 20px; background:#e0dddd; border-radius:8px; font-weight:bold; box-shadow:0 4px 10px rgba(0,0,0,0.1);">Watch Video Results on YouTube</a>
+        <p class="caption"><strong>Video results:</strong> Watch the reconstruction results on YouTube.</p>
     </div>
 </div>
 
@@ -174,18 +165,10 @@
     </div>
 </div>
 
-<div class="container" id="Paper">
-    <h2>Paper Materials</h2>
-    <div class="inner-block">
-        <p class="section-title">Main Paper &amp; Supplementary</p>
-        <h3 style="text-align:center;">All paper materials are provided on this page for easy access during review.</h3>
-    </div>
-</div>
-
 <div class="container" id="Qualitative">
     <h2>Qualitative Results</h2>
     <div class="inner-block">
-        <p class="section-title">Large visual comparisons (one column)</p>
+        <p class="section-title">Large full images (one column)</p>
         <div class="gallery">
             <img src="static/images_pdf/qualitative/qual_hosnerf.jpg" alt="Qualitative comparison on HOSNeRF">
             <img src="static/images_pdf/qualitative/qual_behave.jpg" alt="Qualitative comparison on BEHAVE">
@@ -194,49 +177,40 @@
 </div>
 
 <div class="container" id="Reviewers">
-    <h2>For Reviewers</h2>
+    <h2 style="font-size:1.6em;">For Reviewers</h2>
     <div class="inner-block">
-        <p class="section-title">High-resolution supplemental figures (one column)</p>
         <div class="gallery">
             <div>
-                <img src="static/images_pdf/supplement/reviewer_PjSB(reviewer4)_weakness1.jpg" alt="reviewer_PjSB weakness1">
-                <p class="description"><strong>Img1. reviewer_PjSB (reviewer4) – weakness1:</strong> Provided decomposed renderings (Human-only vs. Object-only) to demonstrate that the model successfully disentangles entities and maintains geometric integrity even in heavily occluded regions.</p>
-            </div>
-            <div>
                 <img src="static/images_pdf/supplement/reviewer_TS9R(reviewer3)_weakness7.jpg" alt="reviewer_TS9R weakness7">
-                <p class="description"><strong>Img2. reviewer_TS9R (reviewer3) – weakness7:</strong> Visually compared the proposed Cubic Hermite Spline (CHS) against an "SE(3) + Offsets" baseline, showing that CHS produces smooth, continuous trajectories while the baseline suffers from jitter and temporal inconsistency.</p>
+                <p class="description"><strong>reviewer_TS9R (reviewer3) – weakness7:</strong> Visually compared the proposed Cubic Hermite Spline (CHS) against an "SE(3) + Offsets" baseline, showing that CHS produces smooth, continuous trajectories while the baseline suffers from jitter and temporal inconsistency.</p>
             </div>
             <div>
                 <img src="static/images_pdf/supplement/reviewer_TS9R(reviewer3)_weakness4.png" alt="reviewer_TS9R weakness4">
-                <p class="description"><strong>Img3. reviewer_TS9R (reviewer3) – weakness4:</strong> Validated interaction fidelity and contact accuracy on ARCTIC and BEHAVE datasets, demonstrating that the HOI module effectively refines poses and reduces object-hand distance errors compared to baselines.</p>
+                <p class="description"><strong>reviewer_TS9R (reviewer3) – weakness4:</strong> Validated interaction fidelity and contact accuracy on ARCTIC and BEHAVE datasets, demonstrating that the HOI module effectively refines poses and reduces object-hand distance errors compared to baselines.</p>
             </div>
             <div>
                 <img src="static/images_pdf/supplement/reviewer_y37W(reivewer2)_weakness5.png" alt="reviewer_y37W weakness5">
-                <p class="description"><strong>Img4. reviewer_y37W (reviewer2) – weakness5:</strong> Provided qualitative visualizations of held-out frame evaluations to demonstrate high-fidelity rendering and temporal stability, as the requested NeuralDome dataset was technically incompatible with monocular initialization.</p>
-            </div>
-            <div>
-                <img src="static/images_pdf/supplement/reviewer_y37W(reviewer2)_weakness2_2.png" alt="reviewer_y37W weakness2_2">
-                <p class="description"><strong>Img5. reviewer_y37W (reviewer2) – weakness2_2:</strong> Visualized geometric accuracy on the ARCTIC dataset, showing that HOIGS achieves significantly better object localization (lower Center/Chamfer distance) and prevents the "floating object" artifacts seen in the HOLD baseline.</p>
+                <p class="description"><strong>reviewer_y37W (reviewer2) – weakness5:</strong> Provided qualitative visualizations of held-out frame evaluations to demonstrate high-fidelity rendering and temporal stability, as the requested NeuralDome dataset was technically incompatible with monocular initialization.</p>
             </div>
             <div>
                 <img src="static/images_pdf/supplement/reviewer_TS9R(reviewer3)_weakness8.png" alt="reviewer_TS9R weakness8">
-                <p class="description"><strong>Img6. reviewer_TS9R (reviewer3) – weakness8:</strong> Demonstrated failure modes in low-baseline scenarios, visually showing that COLMAP pose estimation errors lead to distorted geometry which the HOI module cannot recover due to global misalignment.</p>
+                <p class="description"><strong>reviewer_TS9R (reviewer3) – weakness8:</strong> Demonstrated failure modes in low-baseline scenarios, visually showing that COLMAP pose estimation errors lead to distorted geometry which the HOI module cannot recover due to global misalignment.</p>
             </div>
             <div>
                 <img src="static/images_pdf/supplement/reviewer_TS9R(reviewer3)_weakness2.png" alt="reviewer_TS9R weakness2">
-                <p class="description"><strong>Img7. reviewer_TS9R (reviewer3) – weakness2:</strong> Showed that the requested 2D-map baseline (Animatable Gaussians) fails significantly on monocular inputs, resulting in collapsed geometry and broken meshes, unlike the proposed feature-based approach.</p>
+                <p class="description"><strong>reviewer_TS9R (reviewer3) – weakness2:</strong> Showed that the requested 2D-map baseline (Animatable Gaussians) fails significantly on monocular inputs, resulting in collapsed geometry and broken meshes, unlike the proposed feature-based approach.</p>
             </div>
             <div>
                 <img src="static/images_pdf/supplement/reviewer_y37W(reviewer2)_weakness2_Table1_PA_MPJPE.PNG" alt="reviewer_y37W weakness2 table1">
-                <p class="description"><strong>Img8. reviewer_y37W (reviewer2) – weakness2 Table1 PA-MPJPE:</strong> Validated quantitative improvement in global pose accuracy on the BEHAVE dataset, showing that HOIGS achieves lower PA-MPJPE (0.2853) compared to the ExAvatar baseline (0.3034).</p>
+                <p class="description"><strong>reviewer_y37W (reviewer2) – weakness2 Table1 PA-MPJPE:</strong> Validated quantitative improvement in global pose accuracy on the BEHAVE dataset, showing that HOIGS achieves lower PA-MPJPE (0.2853) compared to the ExAvatar baseline (0.3034).</p>
             </div>
             <div>
                 <img src="static/images_pdf/supplement/reviewer_y37W(reviewer2)_weakness2_Table2_PA_MPJPE(Hand_Forearm).PNG" alt="reviewer_y37W weakness2 table2">
-                <p class="description"><strong>Img9. reviewer_y37W (reviewer2) – weakness2 Table2 PA-MPJPE (Hand/Forearm):</strong> Demonstrated significant error reduction in interaction-critical regions (Hand/Forearm), proving that the HOI module effectively refines poses where mutual dependency is strongest.</p>
+                <p class="description"><strong>reviewer_y37W (reviewer2) – weakness2 Table2 PA-MPJPE (Hand/Forearm):</strong> Demonstrated significant error reduction in interaction-critical regions (Hand/Forearm), proving that the HOI module effectively refines poses where mutual dependency is strongest.</p>
             </div>
             <div>
                 <img src="static/images_pdf/supplement/reviewer_y37W(reviewer2)_weakness2_Table3_PA_PVE.PNG" alt="reviewer_y37W weakness2 table3">
-                <p class="description"><strong>Img10. reviewer_y37W (reviewer2) – weakness2 Table3 PA-PVE:</strong> Showed superior surface-level geometric accuracy with lower PA-PVE scores, confirming that explicit interaction modeling improves mesh alignment better than human-only baselines.</p>
+                <p class="description"><strong>reviewer_y37W (reviewer2) – weakness2 Table3 PA-PVE:</strong> Showed superior surface-level geometric accuracy with lower PA-PVE scores, confirming that explicit interaction modeling improves mesh alignment better than human-only baselines.</p>
             </div>
         </div>
     </div>
