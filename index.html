@@ -1,16 +1,16 @@
-
 <!DOCTYPE html>
-
+<html lang="en">
 <head>
 <meta charset="utf-8" />
-<title></title>
-    
-</head>
-<body><style type="text/css">
+<title>HOIGS: Human-Object Interaction Gaussian Splatting</title>
+<style type="text/css">
 	* {
 		margin: 0;
 		padding: 0;
 	}
+    body {
+        font-family: 'Times New Roman', Times, serif;
+    }
     ul li{
         list-style: none;
     }
@@ -20,282 +20,323 @@
     }
     #menu {
         font:bold 16px "malgun gothic";
-        width:450px;
+        width:550px;
         height:50px;
         background: #e0dddd;
         color:black;
         line-height: 50px; 
         margin:0 auto;
         text-align: center;
+        border-radius: 0 0 10px 10px;
     }
 
     #menu > ul > li {
         float:left;
-        width:140px;
+        width:130px;
         position:relative;
     }
     #menu > ul > li > ul {
-    width:130px;
-    display:none;
-    position: absolute;
-    font-size:14px;
-    background: rgb(229, 243, 248);
+        width:130px;
+        display:none;
+        position: absolute;
+        font-size:14px;
+        background: rgb(229, 243, 248);
+        border-radius: 5px;
+        z-index: 100;
     }
     #menu > ul > li:hover > ul {
         display:block;
     }
-    </style>
+    .container {
+        border: 2px solid rgb(209, 206, 206); 
+        border-radius: 15px; 
+        padding: 20px;
+        width: 1100px; 
+        margin: 20px auto;
+        box-shadow: 1px 1px 2px 6px rgb(209, 206, 206);
+        background-color: white;
+    }
+    .inner-block {
+        border: 2px solid white; 
+        border-radius: 15px; 
+        width: 1000px; 
+        margin: auto;
+    }
+    h1 {
+        font-size: 2em;
+        text-align: center;
+        font-weight: bold;
+        margin-bottom: 10px;
+    }
+    h2 {
+        font-size: 1.5em;
+        text-align: center;
+        font-weight: normal;
+        margin-bottom: 20px;
+        color: #444;
+    }
+    h3 {
+        font-size: 1.1em;
+        font-weight: normal;
+        line-height: 1.6;
+        text-align: justify;
+        color: black;
+    }
+    p {
+        margin-bottom: 15px;
+    }
+    .caption {
+        font-size: 0.9em;
+        text-align: center;
+        margin-top: 10px;
+        color: #555;
+    }
+    table {
+        width: 100%;
+        border-collapse: collapse;
+        margin: 20px 0;
+        font-size: 0.95em;
+    }
+    th, td {
+        border: 1px solid #ddd;
+        padding: 8px;
+        text-align: center;
+    }
+    th {
+        background-color: #f2f2f2;
+        font-weight: bold;
+    }
+    tr:nth-child(even) {
+        background-color: #f9f9f9;
+    }
+    .video-container {
+        text-align: center;
+        margin: 20px 0;
+    }
+</style>
+</head>
+<body>
+
 <div id="menu">
 	<ul>
-		<li><a href="#">Person-in-place</a>
+		<li><a href="#">HOIGS</a>
 			<ul>
 				<li><a href="#Abstract">Abstract</a></li>
-				<li><a href="#method">Method</a></li>
+				<li><a href="#Method">Method</a></li>
 			</ul>
 		</li>
-		<li><a href="#">Qualitative Result</a>
+		<li><a href="#">Results</a>
 			<ul>
-				<li><a href="#Quantitative_results_1">Paper Result 1</a></li>
-				<li><a href="#Quantitative_results_2">Paper Result 2</a></li>
+				<li><a href="#Quantitative">Quantitative</a></li>
+				<li><a href="#Qualitative">Qualitative</a></li>
 			</ul>
 		</li>
-		<li><a href="#">Visualization</a>
+		<li><a href="#">Materials</a>
 			<ul>
-				<li><a href="#Visualization Results">Paper Results</a></li>
-				<li><a href="#add_Visualization Results">Supple Results</a></li>
-				<li><a href="#GUI_tutorial">GUI & Tutorial & Demo</a></li>
+				<li><a href="#Video">Demo Video</a></li>
+				<li><a href="#Paper">Paper</a></li>
 			</ul>
 		</li>
 	</ul>
 </div>
 <br/>
-    <div style="border: 2px solid rgb(209, 206, 206); border-radius: 15px; padding: 10px;width:1100px; margin:auto;box-shadow: 1px 1px 2px 6px rgb(209, 206, 206)">
+
+<div class="container">
+    <h1>HOIGS: Human-Object Interaction Gaussian Splatting From Monocular Videos</h1>
+    <h2>ICLR 2026 (Under Review)</h2>
+    <br/>
+    
+    <div class="video-container" id="Video">
+        <video width="900" controls autoplay loop muted>
+            <source src="HOIGS_demo.mp4" type="video/mp4">
+            Your browser does not support the video tag.
+        </video>
+        <p class="caption"><strong>Demo Video:</strong> Demonstrating HOIGS performance across HOSNeRF, BEHAVE, and other datasets.</p>
+    </div>
+</div>
+
+<div class="container">
+    <h2 id="Abstract">Abstract</h2>
+    <div class="inner-block">
+        <h3>
+            Reconstructing dynamic scenes with complex human-object interactions is a fundamental challenge in computer vision and graphics. Existing Gaussian Splatting methods either rely on human pose priors, neglecting dynamic objects, or approximate all motions within a single field, limiting their ability to capture interaction-rich dynamics. To address this gap, we propose <strong>Human-Object Interaction Gaussian Splatting (HOIGS)</strong>, which explicitly models interaction-induced deformation between humans and objects through a cross-attention based HOI module. Distinct deformation baselines are employed to extract complementary motion features: hexplane for humans and Cubic Hermite Spline (CHS) for objects. By integrating these heterogeneous features, HOIGS effectively captures interdependent motions and improves deformation estimation in scenarios involving occlusion, contact, and object manipulation. Comprehensive experiments demonstrate that our method consistently outperforms state-of-the-art human-centric and 4D Gaussian approaches.
+        </h3>
+    </div>
+</div>
+
+<div class="container">
+    <h2 id="Method">Method: HOIGS Framework</h2>
+    <div class="inner-block">
+        <center>
+            <img src="framework.png" alt="HOIGS Framework Diagram (Please place 'framework.png' in folder)" width="1000" style="border:1px solid #ddd; padding:5px;">
+        </center>
         <br/>
-    <h1><p style="font-size:1.3em;text-align:center; font-family: 'Times New Roman'">Person in Place: Generating Associative Skeleton-Guidance Maps for Human-Object Interaction Image Editing</p></h1>
-    <br/>
-    <h2><p style="color:gray;font-size:0.9em;text-align:center; font-family: 'Times New Roman'">Anonymous CVPR submission</p></h2>
-    <br/>
-    <h2><p style="color:gray;font-size:0.7em;text-align:center; font-family: 'Times New Roman';font-weight: normal;">Paper ID : 8271</p></h2>
-    <br/>
-    <div style="border: 2px solid white; border-radius: 15px; padding: 10px;width:1100px; margin:auto"></div>
-    <!--
-    <center>
-        <a href="Person-in-Place_8271.pdf">
-            <img src="pdf_img.png" width="40" alt="Main Paper"></a>
-            &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; 
-            <a href="https://anonymous.4open.science/r/Person-in-Place-4FF0">
-                <img src="github_img.png" width="50" alt="Main Code"></a>
+        <h3>
+            Our framework reconstructs the scene by independently modeling the deformations of humans and objects, and then incorporating interaction-aware transformations through the HOI module:
+            <br/><br/>
+            <ul>
+                <li><strong>Object Deformation (CHS):</strong> We employ Cubic Hermite Splines (CHS) to capture continuous motion trajectories. By embedding velocity vectors of keyframe Gaussians, we construct robust object motion features that prevent the "melting" artifacts seen in single-field methods.</li>
+                <br/>
+                <li><strong>Human Deformation (Hexplane):</strong> We utilize a hexplane-based deformation baseline, leveraging time-varying parameters to represent fine-grained human deformation in both spatial and temporal domains.</li>
+                <br/>
+                <li><strong>Interaction (HOI) Module:</strong> The core Interaction module uses a mutual attention mechanism to capture bidirectional dependencies. It inputs time-varying human features and object motion features, updating them to regress SMPL-X refinements and object motion corrections, ensuring physical plausibility during contact.</li>
+            </ul>
+        </h3>
+    </div>
+</div>
+
+<div class="container">
+    <h2 id="Quantitative">Quantitative Evaluation</h2>
+    <div class="inner-block">
+        <h3>
+            We compare HOIGS against the state-of-the-art human-centric model, ExAvatar, on the BEHAVE dataset. We focus on geometric fidelity using PA-MPJPE (Procrustes Aligned Mean Per Joint Position Error) and PA-PVE (Procrustes-Aligned Per Vertex Error).
+        </h3>
         
-    </center>
-    -->
-    
+        <br/>
+        <p style="text-align:center; font-weight:bold;">Table 1: PA-MPJPE (All joints) ↓</p>
+        <table>
+            <thead>
+                <tr>
+                    <th>Model</th>
+                    <th>Backpack1</th>
+                    <th>Plastic1</th>
+                    <th>Plastic2</th>
+                    <th>Suitcase1</th>
+                    <th>Backpack2</th>
+                    <th>Plastic3</th>
+                    <th>Backpack3</th>
+                    <th>Trashbin</th>
+                    <th>Average</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>ExAvatar</td>
+                    <td>0.4196</td>
+                    <td>0.3875</td>
+                    <td>0.3094</td>
+                    <td>0.2654</td>
+                    <td>0.2690</td>
+                    <td>0.3293</td>
+                    <td>0.2177</td>
+                    <td>0.2294</td>
+                    <td>0.3034</td>
+                </tr>
+                <tr>
+                    <td style="font-weight:bold; color:black;">HOIGS (Ours)</td>
+                    <td><b>0.4177</b></td>
+                    <td><b>0.2964</b></td>
+                    <td><b>0.2973</b></td>
+                    <td><b>0.2438</b></td>
+                    <td><b>0.2629</b></td>
+                    <td><b>0.3270</b></td>
+                    <td><b>0.2110</b></td>
+                    <td><b>0.2263</b></td>
+                    <td><b>0.2853</b></td>
+                </tr>
+            </tbody>
+        </table>
 
-    <br/>
-    <center>
-    <img src="CVPR_2024_jpg/our_results_total_v6.jpg" alt="My Image" width="1000">
-    <h3><p style="font-size:0.9em;text-align:center; font-family: 'Times New Roman';font-weight: normal;">
-        <strong>Human-object interaction (HOI) image editing using generated skeleton:</strong>
-        We synthesize human interacting with objects for an initial image using the automated object-interactive diffuser. 
-        <strong>(a)</strong> an initial image to edit. <strong>(b)</strong> the sequential process of synthesizing human image with object-interactive skeletons using textual conditions. 
-        <strong>(c)</strong> a final result image with the skeleton map. Our method generates the high quality object interactive skeleton map, 
-        and it can easily plug in to the skeleton guided generative model for HOI image editing.
         <br/>
+        <p style="text-align:center; font-weight:bold;">Table 2: PA-MPJPE (Hand/Forearm joints) ↓</p>
+        <table>
+            <thead>
+                <tr>
+                    <th>Model</th>
+                    <th>Backpack1</th>
+                    <th>Plastic1</th>
+                    <th>Plastic2</th>
+                    <th>Suitcase1</th>
+                    <th>Backpack2</th>
+                    <th>Plastic3</th>
+                    <th>Backpack3</th>
+                    <th>Trashbin</th>
+                    <th>Average</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>ExAvatar</td>
+                    <td>0.4628</td>
+                    <td>0.4282</td>
+                    <td>0.3145</td>
+                    <td>0.2957</td>
+                    <td>0.3135</td>
+                    <td>0.3298</td>
+                    <td>0.2494</td>
+                    <td>0.2597</td>
+                    <td>0.3317</td>
+                </tr>
+                <tr>
+                    <td style="font-weight:bold; color:black;">HOIGS (Ours)</td>
+                    <td><b>0.4539</b></td>
+                    <td><b>0.3344</b></td>
+                    <td><b>0.3120</b></td>
+                    <td><b>0.2649</b></td>
+                    <td><b>0.3068</b></td>
+                    <td><b>0.3265</b></td>
+                    <td><b>0.2380</b></td>
+                    <td><b>0.2550</b></td>
+                    <td><b>0.3114</b></td>
+                </tr>
+            </tbody>
+        </table>
+        <p class="caption">
+            HOIGS significantly improves accuracy in interaction-critical regions (Hand/Forearm), validating the effectiveness of our Cross-Attention HOI module.
+        </p>
+
         <br/>
-    </p></h3>
-    <br/><p id="GUI_tutorial">
+        <p style="text-align:center; font-weight:bold;">Table 3: PA-PVE ↓</p>
+        <table>
+            <thead>
+                <tr>
+                    <th>Model</th>
+                    <th>Average (All Scenes)</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>ExAvatar</td>
+                    <td>0.2795</td>
+                </tr>
+                <tr>
+                    <td style="font-weight:bold; color:black;">HOIGS (Ours)</td>
+                    <td><b>0.2655</b></td>
+                </tr>
+            </tbody>
+        </table>
     </div>
-    <br/>
-    <div style="border: 2px solid rgb(209, 206, 206); border-radius: 15px; padding: 10px;width:1100px; margin:auto;box-shadow: 1px 1px 2px 6px rgb(209, 206, 206)">
-        <br/>
-    <h2><p style="font-size:1.3em;text-align:center; font-family: 'Times New Roman';font-weight: normal;">Our GUI & Demo & Tutorial Code !</h1>
-        <br/>
-    <div style="border: 2px solid white; border-radius: 15px; width:1000px; margin:auto;height: 200;">
-    <h3><p style="color:black;font-size:0.9em; font-family: 'Times New Roman';font-weight: normal;">
-    
-        <center><img src="CVPR_2024_jpg/GUI.gif" alt="My Image" width="500"><img src="CVPR_2024_jpg/GUI_1.gif" alt="My Image" width="500"></center>
-        <center><img src="CVPR_2024_jpg/output.gif" alt="My Image" width="500"><img src="CVPR_2024_jpg/output1.gif" alt="My Image" width="500"></center>
-        <center><img src="CVPR_2024_jpg/output2.gif" alt="My Image" width="500"><img src="CVPR_2024_jpg/output3.gif" alt="My Image" width="500"></center>
-    
-        We plan to provide a User-Friendly Object Interactive Skeleton Generator & GUI for Human-Object-Interaction (HOI) image editing, along with tutorials and demo code for user convenience.
-    </p></h3>
-    </div>
-    </div>
-    <br/>
-    <div style="border: 2px solid rgb(209, 206, 206); border-radius: 15px; padding: 10px;width:1100px; margin:auto;box-shadow: 1px 1px 2px 6px rgb(209, 206, 206)">
-        <br/>
-    <h2><p style="font-size:1.3em;text-align:center; font-family: 'Times New Roman';font-weight: normal;">Human-Object-Interaction Image Editing</h1>
-        <br/>
-    <div style="border: 2px solid white; border-radius: 15px; width:1000px; margin:auto;height: 200;">
-    <h3><p style="color:black;font-size:0.9em; font-family: 'Times New Roman';font-weight: normal;">Traditional image editing technologies have seen significant advancements, 
-        but they face limitations in the realm of Human-Object-Interaction (HOI) image editing. 
-        However, recent developments introduce technologies utilizing Skeleton-guidance maps (e.g., ControlNet, HumanSD, UNI-contronet, T2I-Adapter, etc.) to generate or edit images, 
-        seamlessly performing HOI image editing. Nevertheless, there is currently no existing technology for generating or editing Object interactive Skeletons, 
-        and we propose this for the first time.</p></h3>
-        <br/><p id="Abstract">
-    </div>
-    </div>
-    <br/>
-    <div style="border: 2px solid rgb(209, 206, 206); border-radius: 15px; padding: 10px;width:1100px; margin:auto;box-shadow: 1px 1px 2px 6px rgb(209, 206, 206)">
-        <br/>
-    <h2><p style="font-size:1.3em;text-align:center; font-family: 'Times New Roman';font-weight: normal;">Abstract</p></h2>
-    <br/>
-    <div style="border: 2px solid white; border-radius: 15px; width:1000px; margin:auto;height: 200;">
-    <h3><p style="color:black;font-size:0.9em; font-family: 'Times New Roman';font-weight: normal;">Recently, there were remarkable advances in image editing tasks in various ways. 
-        Nevertheless, existing image editing models are not designed for Human-Object Interaction (HOI) image editing. 
-        One of these approaches (e.g. ControlNet)  employs the skeleton guidance to offer precise representations of human, showing better results in HOI image editing. 
-        However, using conventional methods, manually creating HOI skeleton guidance is necessary. 
-        This paper proposes the object interactive diffuser with associative attention that considers both the interaction with objects and the joint graph structure, 
-        automating the generation of HOI skeleton guidance. Additionally, we propose the HOI loss with novel scaling parameter, demonstrating its effectiveness in generating skeletons that interact better. 
-        To evaluate generated object-interactive skeletons, we propose two metrics, top-N accuracy and skeleton probabilistic distance. 
-        Our framework integrates object interactive diffuser that generates object-interactive skeletons with previous methods, demonstrating the outstanding results in HOI image editing. 
-        Finally, we present potentials of our framework beyond HOI image editing, as applications to human-to-human interaction, skeleton editing, and 3D mesh optimization.</p></h3>
-        <br/><p id="method">
-    </div>
-    </div>
-    <br/>
-    <div style="border: 2px solid rgb(209, 206, 206); border-radius: 15px; padding: 10px;width:1100px; margin:auto;box-shadow: 1px 1px 2px 6px rgb(209, 206, 206)">
-    <div style="border: 2px solid white; border-radius: 15px; width:1000px; margin:auto;height: 200;">
-        <br/>
-    <h2><p style="font-size:1.3em; font-family: 'Times New Roman';font-weight: normal;">Person-in-Place Framework</p></h2>
-    <br/>
-    <h3><p style="color:black;font-size:0.9em; font-family: 'Times New Roman';font-weight: normal;">
-        <strong>Overview of proposed framework</strong>: Our proposed framework uses a cropped image from a person bounding box as an input and the object bounding box. 
-        <strong>(Left)</strong> These are used to extract a image and an object features.
-            <strong>(Middle)</strong> The extracted features are used as a image and object conditioning respectively in our object interactive diffuser. 
-            Using these conditionings, the object interactive diffuser comes to see the object-joint and joint-joint relationships then generate a denoised skeleton based on diffusion process. 
-            (<strong>Right</strong>) The synthesized skeleton together with a masked image using a person bounding box is used to edit image with off the shelf inpainting model.
-    </p></h3>
-    
-        <br/>
-        <img src="CVPR_2024_jpg/main_framework_v1.jpg" alt="My Image" width="1000">
-        <br/>
-    <h3><p style="color:black;font-size:0.9em; font-family: 'Times New Roman';font-weight: normal;">
-        The denoise process first estimate the correlation between the object and the joints, and then it considers the relationship between the joint themselves using a GNN. 
-        After that, the object conditioning is used to predict which joints are most likely to interact with the object. 
-        In this figure, the pixels located inside the snowboard have higher attention score on joints such as hands or foot than others.
+</div>
+
+<div class="container">
+    <h2 id="Qualitative">Visualization & Comparisons</h2>
+    <div class="inner-block">
         
-        This figure visualizes which joint has the greatest association with features correspond to selected pixels in the image colored red, yellow and orange. 
-        The size of the circle indicates the degree of association.
-    
-    </p></h3>
-        <center><img src="CVPR_2024_jpg/main_module_V4.jpg" alt="My Image" width="500"><img src="CVPR_2024_jpg/skeleton_attention.jpg" alt="My Image" width="500"></center>
-        <h3><p style="color:black;font-size:0.9em; font-family: 'Times New Roman';font-weight: normal;">
+        <h3><strong>Comparison with ExAvatar [ECCV 24]:</strong></h3>
+        <center>
+            <img src="reviewer_y37W(reviewer2)_weakness2_2.png" alt="Comparison with ExAvatar" width="900">
+        </center>
+        <h3>
+            <br>
+            Comparison on the BEHAVE dataset. The red box highlights the interaction region. ExAvatar (Left) often suffers from misalignment and blurriness during dynamic interaction. HOIGS (Right) maintains sharp geometry and accurate hand-object contact.
+        </h3>
+
+        <br/><br/>
         
-        </p></h3>
-            <br/>
-
-
-    <br/><p id="Quantitative_results_1"></p>
+        <h3><strong>Robustness against COLMAP failure:</strong></h3>
+        <center>
+            <img src="reviewer_TS9R(reviewer3)_weakness8.png" alt="COLMAP Failure Case" width="900">
+        </center>
+        <h3>
+            <br>
+            Handling low-texture objects (Suitcase). Standard COLMAP initialization often fails to capture geometry in texture-less regions, leading to "melted" artifacts in baselines. By leveraging our explicit object deformation model (CHS), HOIGS recovers the correct structure.
+        </h3>
     </div>
-    </div>
+</div>
 
+<div class="container" style="text-align:center; border:none; box-shadow:none;">
+    <p>Anonymous ICLR 2026 Submission</p>
+</div>
 
-    <br/>
-    <div style="border: 2px solid rgb(209, 206, 206); border-radius: 15px; padding: 10px;width:1100px; margin:auto;box-shadow: 1px 1px 2px 6px rgb(209, 206, 206)">
-
-        <br/>
-        <div style="border: 2px solid white; border-radius: 15px; width:1000px; margin:auto;height: 200;">
-    <h2><p style="font-size:1.3em; font-family: 'Times New Roman';font-weight: normal;">Quantitative HOI image editing Results</p></h2>
-    <br/>
-    
-        <h3><p style="color:black;font-size:0.9em; font-family: 'Times New Roman';font-weight: normal;">
-            <strong>results comparing our framework to the previous image editing model: </strong>
-            Our framework outperforms others on the metrics indicating image quality FID, 
-            KID and metric measuring prompt alignment to image CS. 
-            Two approaches exist in the realm of editing models: Text-Free editing models and Text-Guided editing models. 
-            We belong to the Text-Guided editing model category, and our performance analysis indicates that utilizing our Object Interactive Skeleton for inpainting yields the best results. 
-            Moreover, our approach demonstrates superior performance compared to the upgraded version of the Stable Diffusion-based method, SDXL-inpainting
-            <br/>
-        <br/>
-        <center><img src="CVPR_2024_jpg/result_qunti.jpg" alt="My Image" width="500"></center>
-
-
-        <br/><p id="Quantitative_results_2"></p>
-    </div>
-    </div>
-
-
-    <br/>
-    <div style="border: 2px solid rgb(209, 206, 206); border-radius: 15px; padding: 10px;width:1100px; margin:auto;box-shadow: 1px 1px 2px 6px rgb(209, 206, 206)">
-
-        <br/>
-        <div style="border: 2px solid white; border-radius: 15px; width:1000px; margin:auto;height: 200;">
-    <h2><p style="font-size:1.3em; font-family: 'Times New Roman';font-weight: normal;">Quantitative Object Interactive Skeleton Results</p></h2>
-    <br/>
-    Table 2 provides a comparison of results for the proposed loss scale. 
-    Applying our loss scale shows improvement in object interactive skeleton evaluation performance across all models. 
-    Additionally, Table 3 presents a performance comparison of the proposed Associative Attention mechanism. 
-    It is evident that our method significantly outperforms modules such as conventional attention or attention + GNN (Graph Neural Network).
-        <h3><p style="color:black;font-size:0.9em; font-family: 'Times New Roman';font-weight: normal;">
-            <br/>
-        <br/>
-        <center><img src="CVPR_2024_jpg/result_qunti_v1.jpg" alt="My Image" width="500"><img src="CVPR_2024_jpg/result_qunti_v2.jpg" alt="My Image" width="500"></center>
-
-<br/><p id="Visualization Results"></p>
-    <br/>
-    </div>
-    </div>
-
-    <br/>
-    <div style="border: 2px solid rgb(209, 206, 206); border-radius: 15px; padding: 10px;width:1100px; margin:auto;box-shadow: 1px 1px 2px 6px rgb(209, 206, 206)">
-        <br/>
-        <div style="border: 2px solid white; border-radius: 15px; width:1000px; margin:auto;height: 200;">
-    <h2><p style="font-size:1.3em; font-family: 'Times New Roman';font-weight: normal;">Visualization Results</p></h2>
-    <br/>
-    <img src="CVPR_2024_jpg/main_results_v1.jpg" alt="My Image" width="1000">
-    
-    <br/>
-    <h3><p style="color:black;font-size:0.9em; font-family: 'Times New Roman';font-weight: normal;">
-        <strong>(Top)</strong>: Qualitative results when generating a single person using CoModGAN, 
-        Instruct-Pix2Pix, Stable-Diffusion Inpainting (SD-Inpainting). 
-        <strong>(Top left)</strong> Incomplete or no humans are generated using other models. 
-        <strong>(Top right)</strong> Even though humans are generated, the misaligned or non-interactive humans are synthesized. 
-        <strong>(Bottom)</strong> : Demonstration of image editing with SD-inpainting, SDXL-inpainting and ours. 
-        Other models did not generate a human even using a guided skeleton.        
-    <br/>
-
-    <br/><p id="add_Visualization Results"></p>
-    <br/>
-    </div>
-    </div>
-
-    <br/>
-    <div style="border: 2px solid rgb(209, 206, 206); border-radius: 15px; padding: 10px;width:1100px; margin:auto;box-shadow: 1px 1px 2px 6px rgb(209, 206, 206)">
-        <br/>
-        <div style="border: 2px solid white; border-radius: 15px; width:1000px; margin:auto;height: 200;">
-    <h2><p style="font-size:1.3em; font-family: 'Times New Roman';font-weight: normal;">Additional Visualization Results</p></h2>
-    <br/>
-    <img src="CVPR_2024_jpg/result_skt.jpg" alt="My Image" width="1000">
-    
-    <br/>
-    <h3><p style="color:black;font-size:0.9em; font-family: 'Times New Roman';font-weight: normal;">
-        <strong>Comparison between attention mechanism and associative attention mechanism:</strong> 
-        By employing our associative attention mechanism, the overall shape of skeleton becomes more natural as shown in images of a baby sitting on the bed or a man sitting on the yacht. 
-        Moreover, our associative attention mechanism generates more object-interactive poses, 
-        e.g. swinging, sitting, typing, as joints of the skeleton approach the object through propagation process. 
-        Moreover, even in scenarios with multiple objects, a natural skeleton is generated while interacting with the specified object.  
-        
-    <br/>
-    <img src="CVPR_2024_jpg/test_input_supp_2.jpg" alt="My Image" width="1000">
-    <img src="CVPR_2024_jpg/test_input_supp_3.jpg" alt="My Image" width="1000">
-    <br/>
-    <h3><p style="color:black;font-size:0.9em; font-family: 'Times New Roman';font-weight: normal;">
-        <strong>Comparion of CoModGAN, Instruct-Pix2Pix, SD-Inpainting and Ours:</strong>
-        We use a person bounding box, an object bounding box and a text prompt for HOI image editing. 
-        In most cases of the visualization results, CoModGAN and Instruct-Pix2Pix perform poorly in generating natural humans. 
-        Our results exhibit more object-interactive images than SD-Inpainting, as shown in cases of a woman with wearing a polka-dotted umbrella or a man surfing with the waves. 
-        For an example, in the case of 'A woman in pajamas using her laptop on the stove top in the kitchen', 
-        CoModGAN and SD-Inpainting did not generate even a human shape. Instruct-Pix2Pix failed to maintain the original image, 
-        while our method generated a natural woman that matches the text prompt.
-        <img src="CVPR_2024_jpg/test_input_supp_5.jpg" alt="My Image" width="1000">
-        <img src="CVPR_2024_jpg/test_input_supp_6.jpg" alt="My Image" width="1000">
-        <br/>
-    <h3><p style="color:black;font-size:0.9em; font-family: 'Times New Roman';font-weight: normal;">
-        <strong>Performing on multi-people images:</strong> 
-        This figure shows HOI-edited images of multiple people using SD-Inpainting, SDXL-Inpainting and Ours. 
-        In the first and second column, SD-Inpainting and SDXL-Inpainting fail to generate a human when a person bounding box is provided in a small size. 
-        On the other hand, our method generates natural HOI images regardless of a size of a person bounding box, 
-        since it utilizes object-interactive skeletons. As shown in the fourth column, 
-        people sitting on the sofa and children sitting on the sofa are generated naturally with our method.
 </body>
 </html>
