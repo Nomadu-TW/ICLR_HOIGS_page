@@ -22,7 +22,6 @@
         }
         #menu {
             font: bold 16px "malgun gothic";
-            width: 400px;
             height: 50px;
             background: #e0dddd;
             color: black;
@@ -31,20 +30,35 @@
             text-align: center;
             border-radius: 0 0 10px 10px;
             box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+            display: flex;
+            justify-content: center;
+            max-width: 1100px;
+            padding: 0 40px;
+        }
+        #menu > ul {
+            display: flex;
+            justify-content: space-between;
+            width: 100%;
+            gap: 20px;
         }
         #menu > ul > li {
-            float: left;
-            width: 200px;
             position: relative;
+            padding: 0 30px;
+            flex: 1;
         }
         #menu > ul > li > ul {
-            width: 200px;
+            min-width: 160px;
             display: none;
             position: absolute;
+            left: 50%;
+            transform: translateX(-50%);
             font-size: 14px;
             background: rgb(229, 243, 248);
             border-radius: 5px;
             z-index: 100;
+        }
+        #menu > ul > li > ul > li {
+            padding: 0 10px;
         }
         #menu > ul > li:hover > ul {
             display: block;
@@ -151,7 +165,8 @@
     <h1>HOIGS: Human–Object Interaction Gaussian Splatting from Monocular Videos</h1>
     <h2>Project Materials &amp; Results</h2>
     <div class="video-container" id="Video">
-        <iframe width="960" height="540" src="https://www.youtube.com/embed/V72lzZEV1jw?start=5&autoplay=1&mute=1" title="HOIGS video results" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+        <iframe width="960" height="540" src="https://www.youtube.com/embed/V72lzZEV1jw?autoplay=1&mute=1" title="HOIGS video results" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+        <p class="caption"><strong>Video results:</strong></p>
     </div>
 </div>
 
@@ -167,7 +182,6 @@
 <div class="container" id="Qualitative">
     <h2>Qualitative Results</h2>
     <div class="inner-block">
-        <p class="section-title">Large full images (one column)</p>
         <div class="gallery">
             <img src="static/images_pdf/qualitative/qual_hosnerf.jpg" alt="Qualitative comparison on HOSNeRF">
             <img src="static/images_pdf/qualitative/qual_behave.jpg" alt="Qualitative comparison on BEHAVE">
