@@ -2,14 +2,15 @@
 <html lang="en">
 <head>
 <meta charset="utf-8" />
-<title>HOIGS: Human-Object Interaction Gaussian Splatting</title>
+<title>HOIGS: Human–Object Interaction Gaussian Splatting</title>
 <style type="text/css">
-	* {
-		margin: 0;
-		padding: 0;
-	}
+        * {
+                margin: 0;
+                padding: 0;
+        }
     body {
         font-family: 'Times New Roman', Times, serif;
+        background: #f6f6f6;
     }
     ul li{
         list-style: none;
@@ -20,23 +21,24 @@
     }
     #menu {
         font:bold 16px "malgun gothic";
-        width:550px;
+        width:620px;
         height:50px;
         background: #e0dddd;
         color:black;
-        line-height: 50px; 
+        line-height: 50px;
         margin:0 auto;
         text-align: center;
         border-radius: 0 0 10px 10px;
+        box-shadow: 0 2px 6px rgba(0,0,0,0.1);
     }
 
     #menu > ul > li {
         float:left;
-        width:130px;
+        width:150px;
         position:relative;
     }
     #menu > ul > li > ul {
-        width:130px;
+        width:150px;
         display:none;
         position: absolute;
         font-size:14px;
@@ -48,18 +50,18 @@
         display:block;
     }
     .container {
-        border: 2px solid rgb(209, 206, 206); 
-        border-radius: 15px; 
+        border: 2px solid rgb(209, 206, 206);
+        border-radius: 15px;
         padding: 20px;
-        width: 1100px; 
+        width: 1100px;
         margin: 20px auto;
         box-shadow: 1px 1px 2px 6px rgb(209, 206, 206);
         background-color: white;
     }
     .inner-block {
-        border: 2px solid white; 
-        border-radius: 15px; 
-        width: 1000px; 
+        border: 2px solid white;
+        border-radius: 15px;
+        width: 1000px;
         margin: auto;
     }
     h1 {
@@ -79,263 +81,150 @@
         font-size: 1.1em;
         font-weight: normal;
         line-height: 1.6;
-        text-align: justify;
         color: black;
     }
     p {
         margin-bottom: 15px;
     }
     .caption {
-        font-size: 0.9em;
+        font-size: 0.95em;
         text-align: center;
         margin-top: 10px;
         color: #555;
     }
-    table {
+    .section-title {
+        text-align: center;
+        font-size: 1.3em;
+        margin-bottom: 10px;
+    }
+    .media-frame {
+        border:1px solid #ddd;
+        border-radius:10px;
+        padding:10px;
+        background:#fafafa;
+    }
+    .grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+        gap: 20px;
+        align-items: start;
+    }
+    .grid img {
         width: 100%;
-        border-collapse: collapse;
-        margin: 20px 0;
-        font-size: 0.95em;
+        border-radius: 8px;
+        border: 1px solid #ccc;
+        background: #fff;
     }
-    th, td {
-        border: 1px solid #ddd;
-        padding: 8px;
+    .hero {
         text-align: center;
-    }
-    th {
-        background-color: #f2f2f2;
-        font-weight: bold;
-    }
-    tr:nth-child(even) {
-        background-color: #f9f9f9;
-    }
-    .video-container {
-        text-align: center;
-        margin: 20px 0;
     }
 </style>
 </head>
 <body>
 
 <div id="menu">
-	<ul>
-		<li><a href="#">HOIGS</a>
-			<ul>
-				<li><a href="#Abstract">Abstract</a></li>
-				<li><a href="#Method">Method</a></li>
-			</ul>
-		</li>
-		<li><a href="#">Results</a>
-			<ul>
-				<li><a href="#Quantitative">Quantitative</a></li>
-				<li><a href="#Qualitative">Qualitative</a></li>
-			</ul>
-		</li>
-		<li><a href="#">Materials</a>
-			<ul>
-				<li><a href="#Video">Demo Video</a></li>
-				<li><a href="#Paper">Paper</a></li>
-			</ul>
-		</li>
-	</ul>
+        <ul>
+                <li><a href="#">HOIGS</a>
+                        <ul>
+                                <li><a href="#Abstract">Abstract</a></li>
+                                <li><a href="#Video">Video Results</a></li>
+                        </ul>
+                </li>
+                <li><a href="#">Results</a>
+                        <ul>
+                                <li><a href="#Reviewers">For Reviewers</a></li>
+                                <li><a href="#Qualitative">Qualitative</a></li>
+                        </ul>
+                </li>
+                <li><a href="#">Materials</a>
+                        <ul>
+                                <li><a href="#Paper">Main Paper</a></li>
+                                <li><a href="#Source">Source Files</a></li>
+                        </ul>
+                </li>
+        </ul>
 </div>
 <br/>
 
-<div class="container">
-    <h1>HOIGS: Human-Object Interaction Gaussian Splatting From Monocular Videos</h1>
-    <h2>ICLR 2026 (Under Review)</h2>
-    <br/>
-    
-    <div class="video-container" id="Video">
-        <video width="900" controls autoplay loop muted>
-            <source src="HOIGS_demo.mp4" type="video/mp4">
-            Your browser does not support the video tag.
-        </video>
-        <p class="caption"><strong>Demo Video:</strong> Demonstrating HOIGS performance across HOSNeRF, BEHAVE, and other datasets.</p>
-    </div>
+<div class="container hero">
+    <h1>HOIGS: Human–Object Interaction Gaussian Splatting From Monocular Videos</h1>
+    <h2>Project Materials: Paper, Videos, Supplementary Images, and Source Files</h2>
+    <p class="caption">Everything needed to review our submission is consolidated here following the provided reference layout.</p>
 </div>
 
-<div class="container">
-    <h2 id="Abstract">Abstract</h2>
-    <div class="inner-block">
-        <h3>
-            Reconstructing dynamic scenes with complex human-object interactions is a fundamental challenge in computer vision and graphics. Existing Gaussian Splatting methods either rely on human pose priors, neglecting dynamic objects, or approximate all motions within a single field, limiting their ability to capture interaction-rich dynamics. To address this gap, we propose <strong>Human-Object Interaction Gaussian Splatting (HOIGS)</strong>, which explicitly models interaction-induced deformation between humans and objects through a cross-attention based HOI module. Distinct deformation baselines are employed to extract complementary motion features: hexplane for humans and Cubic Hermite Spline (CHS) for objects. By integrating these heterogeneous features, HOIGS effectively captures interdependent motions and improves deformation estimation in scenarios involving occlusion, contact, and object manipulation. Comprehensive experiments demonstrate that our method consistently outperforms state-of-the-art human-centric and 4D Gaussian approaches.
-        </h3>
-    </div>
-</div>
-
-<div class="container">
-    <h2 id="Method">Method: HOIGS Framework</h2>
-    <div class="inner-block">
+<div class="container" id="Video">
+    <h2 class="section-title">Video Results</h2>
+    <div class="inner-block media-frame">
         <center>
-            <img src="framework.png" alt="HOIGS Framework Diagram (Please place 'framework.png' in folder)" width="1000" style="border:1px solid #ddd; padding:5px;">
+            <video width="1000" controls autoplay loop muted>
+                <source src="static/videos/banner_HOIGS.mp4" type="video/mp4">
+                Your browser does not support the video tag.
+            </video>
         </center>
-        <br/>
+        <p class="caption"><strong>Demonstration:</strong> Representative reconstructions and interaction-aware splatting across our evaluation datasets.</p>
+    </div>
+</div>
+
+<div class="container" id="Abstract">
+    <h2 class="section-title">Abstract</h2>
+    <div class="inner-block">
         <h3>
-            Our framework reconstructs the scene by independently modeling the deformations of humans and objects, and then incorporating interaction-aware transformations through the HOI module:
-            <br/><br/>
-            <ul>
-                <li><strong>Object Deformation (CHS):</strong> We employ Cubic Hermite Splines (CHS) to capture continuous motion trajectories. By embedding velocity vectors of keyframe Gaussians, we construct robust object motion features that prevent the "melting" artifacts seen in single-field methods.</li>
-                <br/>
-                <li><strong>Human Deformation (Hexplane):</strong> We utilize a hexplane-based deformation baseline, leveraging time-varying parameters to represent fine-grained human deformation in both spatial and temporal domains.</li>
-                <br/>
-                <li><strong>Interaction (HOI) Module:</strong> The core Interaction module uses a mutual attention mechanism to capture bidirectional dependencies. It inputs time-varying human features and object motion features, updating them to regress SMPL-X refinements and object motion corrections, ensuring physical plausibility during contact.</li>
-            </ul>
+            Reconstructing dynamic scenes with intricate human–object contact from a single video stream is challenging for Gaussian splatting frameworks that treat all motion uniformly. <strong>Human–Object Interaction Gaussian Splatting (HOIGS)</strong> explicitly disentangles human and object motion using hexplane-based human deformation and Cubic Hermite Splines for objects, then fuses them through a cross-attention HOI module. This interaction-aware composition improves deformation estimation under occlusion, manipulation, and contact, enabling high-fidelity reconstructions of human–object interactions from monocular inputs.
         </h3>
     </div>
 </div>
 
-<div class="container">
-    <h2 id="Quantitative">Quantitative Evaluation</h2>
+<div class="container" id="Reviewers">
+    <h2 class="section-title">For Reviewers: Supplementary Snapshots</h2>
     <div class="inner-block">
         <h3>
-            We compare HOIGS against the state-of-the-art human-centric model, ExAvatar, on the BEHAVE dataset. We focus on geometric fidelity using PA-MPJPE (Procrustes Aligned Mean Per Joint Position Error) and PA-PVE (Procrustes-Aligned Per Vertex Error).
+            High-resolution supplementary figures are provided below for quick inspection. Each image opens full-size when clicked so reviewers can evaluate quantitative tables and qualitative ablations without additional downloads.
         </h3>
-        
         <br/>
-        <p style="text-align:center; font-weight:bold;">Table 1: PA-MPJPE (All joints) ↓</p>
-        <table>
-            <thead>
-                <tr>
-                    <th>Model</th>
-                    <th>Backpack1</th>
-                    <th>Plastic1</th>
-                    <th>Plastic2</th>
-                    <th>Suitcase1</th>
-                    <th>Backpack2</th>
-                    <th>Plastic3</th>
-                    <th>Backpack3</th>
-                    <th>Trashbin</th>
-                    <th>Average</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr>
-                    <td>ExAvatar</td>
-                    <td>0.4196</td>
-                    <td>0.3875</td>
-                    <td>0.3094</td>
-                    <td>0.2654</td>
-                    <td>0.2690</td>
-                    <td>0.3293</td>
-                    <td>0.2177</td>
-                    <td>0.2294</td>
-                    <td>0.3034</td>
-                </tr>
-                <tr>
-                    <td style="font-weight:bold; color:black;">HOIGS (Ours)</td>
-                    <td><b>0.4177</b></td>
-                    <td><b>0.2964</b></td>
-                    <td><b>0.2973</b></td>
-                    <td><b>0.2438</b></td>
-                    <td><b>0.2629</b></td>
-                    <td><b>0.3270</b></td>
-                    <td><b>0.2110</b></td>
-                    <td><b>0.2263</b></td>
-                    <td><b>0.2853</b></td>
-                </tr>
-            </tbody>
-        </table>
-
-        <br/>
-        <p style="text-align:center; font-weight:bold;">Table 2: PA-MPJPE (Hand/Forearm joints) ↓</p>
-        <table>
-            <thead>
-                <tr>
-                    <th>Model</th>
-                    <th>Backpack1</th>
-                    <th>Plastic1</th>
-                    <th>Plastic2</th>
-                    <th>Suitcase1</th>
-                    <th>Backpack2</th>
-                    <th>Plastic3</th>
-                    <th>Backpack3</th>
-                    <th>Trashbin</th>
-                    <th>Average</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr>
-                    <td>ExAvatar</td>
-                    <td>0.4628</td>
-                    <td>0.4282</td>
-                    <td>0.3145</td>
-                    <td>0.2957</td>
-                    <td>0.3135</td>
-                    <td>0.3298</td>
-                    <td>0.2494</td>
-                    <td>0.2597</td>
-                    <td>0.3317</td>
-                </tr>
-                <tr>
-                    <td style="font-weight:bold; color:black;">HOIGS (Ours)</td>
-                    <td><b>0.4539</b></td>
-                    <td><b>0.3344</b></td>
-                    <td><b>0.3120</b></td>
-                    <td><b>0.2649</b></td>
-                    <td><b>0.3068</b></td>
-                    <td><b>0.3265</b></td>
-                    <td><b>0.2380</b></td>
-                    <td><b>0.2550</b></td>
-                    <td><b>0.3114</b></td>
-                </tr>
-            </tbody>
-        </table>
-        <p class="caption">
-            HOIGS significantly improves accuracy in interaction-critical regions (Hand/Forearm), validating the effectiveness of our Cross-Attention HOI module.
-        </p>
-
-        <br/>
-        <p style="text-align:center; font-weight:bold;">Table 3: PA-PVE ↓</p>
-        <table>
-            <thead>
-                <tr>
-                    <th>Model</th>
-                    <th>Average (All Scenes)</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr>
-                    <td>ExAvatar</td>
-                    <td>0.2795</td>
-                </tr>
-                <tr>
-                    <td style="font-weight:bold; color:black;">HOIGS (Ours)</td>
-                    <td><b>0.2655</b></td>
-                </tr>
-            </tbody>
-        </table>
+        <div class="grid">
+            <a href="static/images_pdf/supplement/reviewer_y37W(reviewer2)_weakness2_Table1_PA_MPJPE.PNG" target="_blank"><img src="static/images_pdf/supplement/reviewer_y37W(reviewer2)_weakness2_Table1_PA_MPJPE.PNG" alt="PA-MPJPE Table"></a>
+            <a href="static/images_pdf/supplement/reviewer_TS9R(reviewer3)_weakness8.png" target="_blank"><img src="static/images_pdf/supplement/reviewer_TS9R(reviewer3)_weakness8.png" alt="Supplementary visualization"></a>
+            <a href="static/images_pdf/supplement/reviewer_y37W(reviewer2)_weakness2_Table3_PA_PVE.PNG" target="_blank"><img src="static/images_pdf/supplement/reviewer_y37W(reviewer2)_weakness2_Table3_PA_PVE.PNG" alt="PA-PVE Table"></a>
+        </div>
+        <p class="caption">Supplementary images are stored under <code>static/images_pdf/supplement/</code> and mirrored here as large previews.</p>
     </div>
 </div>
 
-<div class="container">
-    <h2 id="Qualitative">Visualization & Comparisons</h2>
+<div class="container" id="Qualitative">
+    <h2 class="section-title">Qualitative Results</h2>
     <div class="inner-block">
-        
-        <h3><strong>Comparison with ExAvatar [ECCV 24]:</strong></h3>
-        <center>
-            <img src="reviewer_y37W(reviewer2)_weakness2_2.png" alt="Comparison with ExAvatar" width="900">
-        </center>
         <h3>
-            <br>
-            Comparison on the BEHAVE dataset. The red box highlights the interaction region. ExAvatar (Left) often suffers from misalignment and blurriness during dynamic interaction. HOIGS (Right) maintains sharp geometry and accurate hand-object contact.
+            Full-resolution qualitative comparisons across datasets illustrate HOIGS performance on complex human–object interactions. Click any image for the original size.
         </h3>
+        <br/>
+        <div class="grid">
+            <a href="static/images_pdf/qualitative/qual_behave.jpg" target="_blank"><img src="static/images_pdf/qualitative/qual_behave.jpg" alt="BEHAVE qualitative results"></a>
+            <a href="static/images_pdf/qualitative/qual_hosnerf.jpg" target="_blank"><img src="static/images_pdf/qualitative/qual_hosnerf.jpg" alt="HOSNeRF qualitative results"></a>
+        </div>
+    </div>
+</div>
 
-        <br/><br/>
-        
-        <h3><strong>Robustness against COLMAP failure:</strong></h3>
-        <center>
-            <img src="reviewer_TS9R(reviewer3)_weakness8.png" alt="COLMAP Failure Case" width="900">
-        </center>
+<div class="container" id="Paper">
+    <h2 class="section-title">Main Paper</h2>
+    <div class="inner-block">
         <h3>
-            <br>
-            Handling low-texture objects (Suitcase). Standard COLMAP initialization often fails to capture geometry in texture-less regions, leading to "melted" artifacts in baselines. By leveraging our explicit object deformation model (CHS), HOIGS recovers the correct structure.
+            The full paper is available as a PDF for detailed methodology and experiments.
+        </h3>
+        <p class="caption"><a href="paper_info/iclr2026_conference.pdf" target="_blank"><strong>Download: HOIGS Paper (PDF)</strong></a></p>
+    </div>
+</div>
+
+<div class="container" id="Source">
+    <h2 class="section-title">Source Files</h2>
+    <div class="inner-block">
+        <h3>
+            All assets used to rebuild this page, including videos, figures, and HTML/CSS, reside in the repository. Primary folders include <code>static/videos</code> for demos and <code>static/images_pdf</code> for supplementary and qualitative figures. Use these sources to reproduce or extend the project page layout.
         </h3>
     </div>
 </div>
 
 <div class="container" style="text-align:center; border:none; box-shadow:none;">
-    <p>Anonymous ICLR 2026 Submission</p>
+    <p>Anonymous ICLR Submission — Human–Object Interaction Gaussian Splatting</p>
 </div>
 
 </body>
